@@ -62,7 +62,7 @@ public class Juego {
         while (jugando) {
 
             // TODO 3: Leer el comando del usuario por teclado
-            //System.out.print("\n hola ");
+            System.out.print("\n> ");
             //String comando = ...;
 
             /*
