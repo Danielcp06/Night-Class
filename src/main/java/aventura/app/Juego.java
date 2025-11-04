@@ -12,9 +12,12 @@ public class Juego {
     // --- NÚCLEO: Definición de Datos (FASE 1) ---
     // Esta parte os la damos HECHA. Es el "contrato" del núcleo.
 
-    private static String descripcionJuego = "No sabes qué ha pasado. Justo cuando terminabas las clases te quedaste el último como siempre recogiendo tus cosas. " +
-            "Pero algo pasó. Lo último que recuerdas es que sentiste mucho frío y todo se volvió oscuro. Ahora estás en tu clase, pero es de noche y el instituto está cerrado." +
-            "¿Nadie te ha visto? ¿Por qué las limpiadoras no te han despertado?";
+    private static String descripcionJuego = "Seis meses después del primer día del apocalipsis, eres J.A Bermudo, un exdetective \n" +
+            "obsesionado con encontrar el \"Protocolo P.R.C\", la clave del brote, de la Dra. Sonia Joao. Tu pista te \n" +
+            "lleva al sellado edificio de la Corporación Miravent, un laberinto silencioso lleno de peligros.\n" +
+            "En la recepción, tu objetivo es encontrar información en las distintas salas para avanzar. Te enfrentas \n" +
+            "a tu primera elección crucial: la puerta de los Archivos (Izquierda) o las escaleras de servicio (Derecha) \n" +
+            "hacia niveles inferiores. Tu supervivencia depende de la información que encuentres en cada sala. \n";
 
     // El mapa de habitaciones.
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
@@ -47,10 +50,10 @@ public class Juego {
         Scanner scanner = new Scanner(System.in);
         boolean jugando = true;
 
-        System.out.println("¡Bienvenido a 'TU PROPIA AVENTURA'!");
+        System.out.println("'LA CURA'");
         System.out.println("------------------------------------------");
 
-        // TODO 1a: Muestra la descripción general del juego
+        System.out.println(descripcionJuego);
 
         System.out.println(habitaciones[0]);
 
