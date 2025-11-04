@@ -22,7 +22,7 @@ public class Juego {
     // El mapa de habitaciones.
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
     private static String[] habitaciones = {
-            "Estás en tu aula, el aula 103. Hay una puerta a la DERECHA.",  // Posición 0
+            "Estás en el pasillo principal de la corporación Mirabent. Hay puertas a la DERECHA y a la IZQUIERDA",  // Posición 0
             "Estás en el pasillo principal. Hay puertas a la DERECHA y a la IZQUIDA.", // Posición 1
             "Estás en el aula 105. Hay una puerta a la IZQUIERDA y has visto una 'llave' en una mesa.", // Posición 2
             // Borra las habitaciones y escribe las tuyas
@@ -55,8 +55,7 @@ public class Juego {
 
         System.out.println(descripcionJuego);
 
-        // TODO 1b: Muestra la descripción de la primera habitación
-        // Pista: System.out.println(habitaciones[...]);
+        System.out.println(habitaciones[0]);
 
 
         // TODO 2: Iniciar el bucle principal del juego (game loop)
