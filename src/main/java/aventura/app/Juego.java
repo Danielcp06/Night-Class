@@ -16,14 +16,14 @@ public class Juego {
             "obsesionado con encontrar el \"Protocolo P.R.C\", la clave del brote, de la Dra. Sonia Joao. Tu pista te \n" +
             "lleva al sellado edificio de la Corporación Miravent, un laberinto silencioso lleno de peligros.\n" +
             "En la recepción, tu objetivo es encontrar información en las distintas salas para avanzar. Te enfrentas \n" +
-            "a tu primera elección crucial: la puerta de los Archivos (Izquierda) o las escaleras de servicio (Derecha) \n" +
+            "a tu primera elección crucial: sala del servicio de mantenimiento (Izquierda) o las escaleras de servicio (Derecha) \n" +
             "hacia niveles inferiores. Tu supervivencia depende de la información que encuentres en cada sala. \n";
 
     // El mapa de habitaciones.
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
     private static String[] habitaciones = {
             "Estás en el pasillo principal de la corporación Mirabent. Hay puertas a la DERECHA y a la IZQUIERDA",  // Posición 0
-            "Estás en el pasillo principal. Hay puertas a la DERECHA y a la IZQUIDA.", // Posición 1
+            "", // Posición 1
             "Estás en el aula 105. Hay una puerta a la IZQUIERDA y has visto una 'llave' en una mesa.", // Posición 2
             // Borra las habitaciones y escribe las tuyas
     };
