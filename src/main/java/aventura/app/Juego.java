@@ -23,7 +23,8 @@ public class Juego {
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
     private static String[] habitaciones = {
             "Estás en el pasillo principal de la corporación Mirabent. Hay puertas a la DERECHA y a la IZQUIERDA",  // Posición 0
-            "", // Posición 1
+            "Una sala pequeña, iluminada por luces parpadeantes. En las paredes hay herramientas viejas y planos manchados. \n" +
+                    "Todo parece abandonado con prisa. Huele a metal, a polvo… y a algo más.", // Posición 1
             "Estás en el aula 105. Hay una puerta a la IZQUIERDA y has visto una 'llave' en una mesa.", // Posición 2
             // Borra las habitaciones y escribe las tuyas
     };
