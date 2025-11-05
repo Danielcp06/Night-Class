@@ -12,25 +12,31 @@ public class Juego {
     // --- NÚCLEO: Definición de Datos (FASE 1) ---
     // Esta parte os la damos HECHA. Es el "contrato" del núcleo.
 
-    private static String descripcionJuego = "Seis meses después del primer día del apocalipsis, eres J.A Bermudo, un exdetective \n" +
-            "obsesionado con encontrar el \"Protocolo P.R.C\", la clave del brote, de la Dra. Sonia Joao. Tu pista te \n" +
-            "lleva al sellado edificio de la Corporación Miravent, un laberinto silencioso lleno de peligros.\n" +
-            "En la recepción, tu objetivo es encontrar información en las distintas salas para avanzar. Te enfrentas \n" +
-            "a tu primera elección crucial: sala del servicio de mantenimiento (Izquierda) o las escaleras de servicio (Derecha) \n" +
-            "hacia niveles inferiores. Tu supervivencia depende de la información que encuentres en cada sala. \n";
+    private static String descripcionJuego =
+
+                    "Seis meses después del primer día del apocalipsis, eres J.A Bermudo, un exdetective \n" +
+                    "obsesionado con encontrar el \"Protocolo P.R.C\", la clave del brote, de la Dra. Sonia Joao. Tu pista te \n" +
+                    "lleva al sellado edificio de la Corporación Miravent, un laberinto silencioso lleno de peligros.\n" +
+                    "En la recepción, tu objetivo es encontrar información en las distintas salas para avanzar. Te enfrentas \n" +
+                    "a tu primera elección crucial: sala del servicio de mantenimiento (Izquierda) o la sala de descanso (Derecha) \n" +
+                    "hacia niveles inferiores. Tu supervivencia depende de la información que encuentres en cada sala. \n";
 
     // El mapa de habitaciones.
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
     private static String[] habitaciones = {
-            "Una sala pequeña, iluminada por luces parpadeantes. En las paredes hay herramientas viejas y planos manchados. \n" +
+
+                    "Una sala pequeña, iluminada por luces parpadeantes. En las paredes hay herramientas viejas y planos manchados. \n" +
                     "Todo parece abandonado con prisa. Huele a metal, a polvo… y a algo más.", // Posición 0
 
-            "Estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
+                    "Estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
                     "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
                     "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
                     "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.", // Posición 1
 
-            "Estás en el aula 105. Hay una puerta a la IZQUIERDA y has visto una 'llave' en una mesa.", // Posición 2
+                    "El contraste con el resto del edificio es inmediato.\n" +
+                            "Esta sala parece congelada en el tiempo: mesas de plástico, máquinas expendedoras vacías y tazas abandonadas en los lavabos. \n +" +
+                            "Una pantalla en una esquina muestra un vídeo corporativo en bucle —aunque el sonido está distorsionado y las imágenes se ven cortadas por interferencias.\n" +
+                            "El ambiente es incómodamente cotidiano, como si la gente que trabajaba aquí hubiera salido solo por un momento... pero nadie volvió..", // Posición 2
 
     };
 
