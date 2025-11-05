@@ -49,21 +49,21 @@ public class Juego {
         // Puedes utilizar la clase MiEntradaSalida, que viviría en el paquete io
         Scanner sc = new Scanner(System.in);
         boolean jugando = true;
-
+        int posicionActual = 1;
         System.out.println("'LA CURA'");
         System.out.println("------------------------------------------");
 
         System.out.println(descripcionJuego);
 
-        System.out.println(habitaciones[0]);
+        System.out.println(habitaciones[posicionActual]);
 
+        System.out.println("Las opciones son ayuda, mirar, inventario, \n" +
+                "ir derecha, ir izquierda, coger [objeto] y salir");
 
         // TODO 2: Iniciar el bucle principal del juego (game loop)
         while (jugando) {
 
             // TODO 3: Leer el comando del usuario por teclado
-            System.out.print("Las opciones son ayuda, mirar, inventario,\n" +
-                           "derecha, izquierda, coger [objeto] y salir  ");
             String comando = sc.nextLine() ;
 
             /*
@@ -72,7 +72,31 @@ public class Juego {
              Debe gestionar como mínimo: "ayuda", "mirar", "inventario",
              "ir derecha", "ir izquierda", "coger [objeto]" y "salir".
              */
-
+            switch (comando.toLowerCase()){
+                case "ir derecha":
+                    System.out.println(habitaciones[posicionActual + 1]);
+                    posicionActual = posicionActual + 1;
+                    break;
+                case "ir izquierda":
+                    System.out.println(habitaciones[posicionActual - 1]);
+                    posicionActual = posicionActual - 1;
+                    break;
+                case "mirar":
+                    System.out.println(habitaciones[habitacionActual]);
+                    break;
+                case "salir":
+                    jugando = false;
+                    break;
+                case "ayuda":
+                    System.out.println("Las opciones son ayuda, mirar, inventario,\n" +
+                            "ir derecha, ir izquierda, coger [objeto] y salir \n" );
+                    break;
+                case "coger":
+                    System.out.println();
+                case "inventario":
+                    ;
+                    break;
+            }
 
         }
 
