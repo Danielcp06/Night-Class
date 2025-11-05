@@ -47,7 +47,7 @@ public class Juego {
 
     public static void main(String[] args) {
         // Puedes utilizar la clase MiEntradaSalida, que viviría en el paquete io
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         boolean jugando = true;
 
         System.out.println("'LA CURA'");
@@ -62,8 +62,9 @@ public class Juego {
         while (jugando) {
 
             // TODO 3: Leer el comando del usuario por teclado
-            System.out.print("\n> ");
-            //String comando = ...;
+            System.out.print("Las opciones son ayuda, mirar, inventario,\n" +
+                           "derecha, izquierda, coger [objeto] y salir  ");
+            String comando = sc.nextLine() ;
 
             /*
             TODO 4: Crear un 'switch' o una estructura 'if-else if'
@@ -76,7 +77,7 @@ public class Juego {
         }
 
         System.out.println("¡Gracias por jugar!");
-        scanner.close();
+        sc.close();
     }
 
     /*
