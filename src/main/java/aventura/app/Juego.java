@@ -22,15 +22,50 @@ public class Juego {
     // El mapa de habitaciones.
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
     private static String[] habitaciones = {
-            "Una sala pequeña, iluminada por luces parpadeantes. En las paredes hay herramientas viejas y planos manchados. \n" +
+
+                    "Una sala pequeña, iluminada por luces parpadeantes. En las paredes hay herramientas viejas y planos manchados. \n" +
                     "Todo parece abandonado con prisa. Huele a metal, a polvo… y a algo más.\n", // Posición 0
 
-            "Estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
+                    "Estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
                     "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
                     "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
                     "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n", // Posición 1
 
-            "Estás en el aula 105. Hay una puerta a la IZQUIERDA y has visto una 'llave' en una mesa.", // Posición 2
+                    "SALA DE DESCANSO:Una cafetera queda encendida, burbujeando un café quemado con olor rancio. Sillas volcadas y bandejas con comida a medio comer sugieren una interrupción brusca.\n" +
+                            " Hay casilleros abiertos: dentro hay pertenencias personales, fotos de familia y tarjetas de acceso.\n" +
+                            " En una mesa, un móvil vibra sin parar, mostrando una notificación repetida:\n" +
+                            "\n" + "“Protocolo interno de emergencia activado. No abandonar el edificio.”",//Posición 2
+
+                    "SALA DE MANTENIMIENTO:Herramientas desparramadas cubren el suelo. Linternas, cinta aislante y un carrito de herramientas bloquean parcialmente una puerta lateral.\n" +
+                            " El aire huele a aceite y metal. Un tablero eléctrico parpadea con advertencias rojas:\n" +
+                            "\n" + "“Fallo en el suministro de energía — plantas inferiores comprometidas.”\n" +
+                            "Cerca del tablero, hay marcas de arañazos profundas, como si alguien hubiera intentado entrar… o salir", //Posición 3
+
+                    "LABORATORIO DE INVESTIGACIÓN:la puerta está trabada a medias, dejando un espacio estrecho para entrar. Luces rojas pulsantes bañan la sala. Tubos de ensayo rotos y frascos marcados con símbolos biológicos cubren las mesas. En el fondo, una cámara de contención de vidrio está agrietada desde dentro.\n" +
+                            "Un monitor reproduce una grabación detenida en una frase:\n" +
+                            "\n" + "“¡Aún no está listo para la exposición humana!”", //Posición 4
+
+                    "CENTRO DE CONTROL:pantallas mostrando cámaras del edificio dan la impresión de que alguien aún vigila. En algunas se ven pasillos vacíos, pero en otras se distinguen siluetas moviéndose lento y errático.\n" +
+                            "Un panel abierto muestra cables quemados. Sobre el escritorio hay un registro con la última entrada:\n" +
+                            "\n" + "“Bloqueen todos los accesos. No dejen salir nada.”", //Posición 5
+
+                    "SALA DE DOCUMENTACIÓN:estantes metálicos hasta el techo, llenos de carpetas con sellos: Clasificado / Confidencial / Proyecto AURORA. El suelo está tapizado de papeles, como si alguien buscara algo con desesperación.\n" +
+                            "Una carpeta abierta en una mesa muestra un gráfico con curvas ascendentes y una nota adherida:\n" +
+                            "\n" + "“La tasa de infección es exponencial. No podemos controlarlo.”",//Posición 6
+
+                    "LABORATORIO QUÍMICO:olor penetrante, vidrios rotos y líquidos reaccionando todavía sobre una superficie metálica. La campana extractora sigue funcionando, absorbiendo un humo blanco.\n" +
+                            "En la pizarra hay ecuaciones químicas y una frase escrita con trazos frenéticos:\n" +
+                            "\n" + "“Deja de buscar cura. Evalúa contención.”",//Posición 7
+
+                    "SALA DE SERVICIO:la temperatura aquí es extrañamente baja. El zumbido constante de las máquinas genera un ambiente sofocante. Los servidores parpadean como estrellas artificiales.\n" +
+                            "Una terminal desbloqueada muestra un archivo:\n" +
+                            "\n" + "“PROTOCOLO FASE FINAL – Autorización Nivel 7 requerida.”\n" +
+                            "La barra para ingresar contraseña está manchada de sangre seca.",//Posición 8
+
+                    "ALMACÉN DE PROVISIONES:cajas apiladas por todas partes, muchas con el logo corporativo y la frase Distribución Global. Algunas contienen trajes de bioseguridad, otras jeringas vacías.\n" +
+                            "Una puerta de carga industrial está atrancada con un carro elevador.\n" +
+                            "Sobre una caja abierta hay un mapa del edificio, marcado con un fluorescente:\n" +
+                            "\n" + "“RUTA ESCAPE — SOLO PERSONAL AUTORIZADO”",//Posición 9
 
     };
 
