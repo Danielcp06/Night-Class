@@ -25,18 +25,34 @@ public class Juego {
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
     private static String[] habitaciones = {
 
-                    "Una sala pequeña, iluminada por luces parpadeantes. En las paredes hay herramientas viejas y planos manchados. \n" +
-                    "Todo parece abandonado con prisa. Huele a metal, a polvo… y a algo más.", // Posición 0
+                            "Una sala pequeña, iluminada por luces parpadeantes. En las paredes hay herramientas viejas y planos manchados. \n" +
+                            "Todo parece abandonado con prisa. Huele a metal, a polvo… y a algo más.", // Posición 0
 
-                    "Estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
-                    "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
-                    "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
-                    "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.", // Posición 1
+                            "Estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
+                            "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
+                            "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
+                            "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.", // Posición 1
 
-                    "El contraste con el resto del edificio es inmediato.\n" +
+                            "El contraste con el resto del edificio es inmediato.\n" +
                             "Esta sala parece congelada en el tiempo: mesas de plástico, máquinas expendedoras vacías y tazas abandonadas en los lavabos. \n +" +
                             "Una pantalla en una esquina muestra un vídeo corporativo en bucle —aunque el sonido está distorsionado y las imágenes se ven cortadas por interferencias.\n" +
                             "El ambiente es incómodamente cotidiano, como si la gente que trabajaba aquí hubiera salido solo por un momento... pero nadie volvió..", // Posición 2
+
+                            "LABORATORIO DE INVESTIGACIÓN:luces parpadeantes iluminan mesas llenas de muestras etiquetadas con códigos y advertencias biológicas.\n" +
+                                    " Hay documentos tirados que mencionan protocolos de contención y un proyecto confidencial.",//Posición 3
+
+                            "CENTRO DE CONTROL:múltiples pantallas muestran cámaras de todo el edificio. Algunas zonas aparecen en rojo con la palabra “Cuarentena”. \n" +
+                                    " En la silla, un auricular cae al suelo, todavía con interferencias y voces distorsionadas.", //Posición 4
+
+                            "SALA DE DOCUMENTACIÓN:estanterías metálicas llenas de carpetas selladas. \n" +
+                                    " Un archivador está forzado. En su interior, papeles que parecen revelar las primeras etapas del brote. Los ventiladores del techo zumban, rompiendo el silencio.", //Posición 5
+
+                            "LABORATORIO QUÍMICO:frascos rotos derraman líquidos de colores en el suelo. El aire huele a químicos fuertes.\n" +
+                                    "En una caja cerrada hay cilindros marcados con el símbolo de “no inhalar”. Parece haber señales de una evacuación apresurada.", //Posición 6
+
+                            "SALA DE SERVIDORES:filas de servidores aún encendidos, parpadeando como un corazón artificial. En una terminal desbloqueada aparece un archivo titulado “PROTOCOLO: FASE FINAL”." //Posición 7
+
+
 
     };
 
