@@ -23,23 +23,22 @@ public class Juego {
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
     private static String[] habitaciones = {
             "Una sala pequeña, iluminada por luces parpadeantes. En las paredes hay herramientas viejas y planos manchados. \n" +
-                    "Todo parece abandonado con prisa. Huele a metal, a polvo… y a algo más.", // Posición 0
+                    "Todo parece abandonado con prisa. Huele a metal, a polvo… y a algo más.\n", // Posición 0
 
             "Estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
                     "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
                     "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
-                    "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.", // Posición 1
+                    "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n", // Posición 1
 
             "Estás en el aula 105. Hay una puerta a la IZQUIERDA y has visto una 'llave' en una mesa.", // Posición 2
 
     };
 
     // Los objetos que hay en cada habitación.
-    // TODO: (Skin) Rellenad esto con vuestros objetos
-    private static String[][] objetosMapa = {
-            {null, null},           // Objetos en Habitación 0
+    public static String[][] objetosMapa = {
+            {"llave inglesa", null},           // Objetos en Habitación 0
             {null, null},           // Objetos en Habitación 1
-            {"llave", "nota"},      // Objetos en Habitación 2
+            {null, "taza"},      // Objetos en Habitación 2
     };
 
     // El inventario del jugador. Tamaño fijo.
