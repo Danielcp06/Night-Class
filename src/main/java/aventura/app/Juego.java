@@ -39,10 +39,18 @@ public class Juego {
                             "El ambiente es incómodamente cotidiano, como si la gente que trabajaba aquí hubiera salido solo por un momento... pero nadie volvió..", // Posición 2
 
                             "LABORATORIO DE INVESTIGACIÓN:luces parpadeantes iluminan mesas llenas de muestras etiquetadas con códigos y advertencias biológicas.\n" +
-                                    " Hay documentos tirados que mencionan protocolos de contención y un proyecto confidencial.",//posición 3
+                                    " Hay documentos tirados que mencionan protocolos de contención y un proyecto confidencial.",//Posición 3
 
                             "CENTRO DE CONTROL:múltiples pantallas muestran cámaras de todo el edificio. Algunas zonas aparecen en rojo con la palabra “Cuarentena”. \n" +
-                                    " En la silla, un auricular cae al suelo, todavía con interferencias y voces distorsionadas."
+                                    " En la silla, un auricular cae al suelo, todavía con interferencias y voces distorsionadas.", //Posición 4
+
+                            "SALA DE DOCUMENTACIÓN:estanterías metálicas llenas de carpetas selladas. \n" +
+                                    " Un archivador está forzado. En su interior, papeles que parecen revelar las primeras etapas del brote. Los ventiladores del techo zumban, rompiendo el silencio.", //Posición 5
+
+                            "LABORATORIO QUÍMICO:frascos rotos derraman líquidos de colores en el suelo. El aire huele a químicos fuertes.\n" +
+                                    "En una caja cerrada hay cilindros marcados con el símbolo de “no inhalar”. Parece haber señales de una evacuación apresurada.", //Posición 6
+
+                            "SALA DE SERVIDORES:filas de servidores aún encendidos, parpadeando como un corazón artificial. En una terminal desbloqueada aparece un archivo titulado “PROTOCOLO: FASE FINAL”." //Posición 7
 
 
 
