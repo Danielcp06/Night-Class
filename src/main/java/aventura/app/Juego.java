@@ -23,28 +23,29 @@ public class Juego {
     // TODO: (Skin) ¡Rellenad esto con vuestras descripciones!
     private static String[] habitaciones = {
 
-                    "RECEPCIÓN:estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
-                            "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
-                            "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
-                            "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n", // Posición 0
 
                     "SALA DE DESCANSO:Una cafetera queda encendida, burbujeando un café quemado con olor rancio. Sillas volcadas y bandejas con comida a medio comer sugieren una interrupción brusca.\n" +
                             " Hay casilleros abiertos: dentro hay pertenencias personales, fotos de familia y tarjetas de acceso.\n" +
                             " En una mesa, un móvil vibra sin parar, mostrando una notificación repetida:\n" +
-                            "\n" + "“Protocolo interno de emergencia activado. No abandonar el edificio.”",//Posición 1
+                            "\n" + "“Protocolo interno de emergencia activado. No abandonar el edificio.”",//Posición 0
 
                     "SALA DE MANTENIMIENTO:Herramientas desparramadas cubren el suelo. Linternas, cinta aislante y un carrito de herramientas bloquean parcialmente una puerta lateral.\n" +
                             " El aire huele a aceite y metal. Un tablero eléctrico parpadea con advertencias rojas:\n" +
                             "\n" + "“Fallo en el suministro de energía — plantas inferiores comprometidas.”\n" +
-                            "Cerca del tablero, hay marcas de arañazos profundas, como si alguien hubiera intentado entrar… o salir", //Posición 2
+                            "Cerca del tablero, hay marcas de arañazos profundas, como si alguien hubiera intentado entrar… o salir", //Posición 1
 
                     "LABORATORIO DE INVESTIGACIÓN:la puerta está trabada a medias, dejando un espacio estrecho para entrar. Luces rojas pulsantes bañan la sala. Tubos de ensayo rotos y frascos marcados con símbolos biológicos cubren las mesas. En el fondo, una cámara de contención de vidrio está agrietada desde dentro.\n" +
                             "Un monitor reproduce una grabación detenida en una frase:\n" +
-                            "\n" + "“¡Aún no está listo para la exposición humana!”", //Posición 3
+                            "\n" + "“¡Aún no está listo para la exposición humana!”", //Posición 2
 
                     "CENTRO DE CONTROL:pantallas mostrando cámaras del edificio dan la impresión de que alguien aún vigila. En algunas se ven pasillos vacíos, pero en otras se distinguen siluetas moviéndose lento y errático.\n" +
                             "Un panel abierto muestra cables quemados. Sobre el escritorio hay un registro con la última entrada:\n" +
-                            "\n" + "“Bloqueen todos los accesos. No dejen salir nada.”", //Posición 4
+                            "\n" + "“Bloqueen todos los accesos. No dejen salir nada.”", //Posición 3
+
+                    "RECEPCIÓN:estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
+                            "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
+                            "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
+                            "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n", // Posición 4
 
                     "SALA DE DOCUMENTACIÓN:estantes metálicos hasta el techo, llenos de carpetas con sellos: Clasificado / Confidencial / Proyecto AURORA. El suelo está tapizado de papeles, como si alguien buscara algo con desesperación.\n" +
                             "Una carpeta abierta en una mesa muestra un gráfico con curvas ascendentes y una nota adherida:\n" +
@@ -70,29 +71,54 @@ public class Juego {
     public static String[][] objetosMapa = {
             {"llave inglesa", null},           // Objetos en Habitación 0
             {null, null},           // Objetos en Habitación 1
-            {null, "taza"},      // Objetos en Habitación 2
+            {null, "taza"},         // Objetos en Habitación 2
+            {null, null},           // Objetos en Habitación 3
+            {null, null},           // Objetos en Habitación 4
+            {null, null},           // Objetos en habitación 5
+            {null, null},           // Objetos en Habitación 6
+            {null, null},           // Objetos en Habitación 7
+            {null, null},           // Objetos en Habitación 8
+
     };
 
     // El inventario del jugador. Tamaño fijo.
     private static String[] inventario = new String[5];
 
     // Variable que guarda la posición actual del jugador
-    private static int habitacionActual = 0; // Empezamos en la primera habitación
+    private static int habitacionActual = 4; // Empezamos en la primera habitación
 
-    // --- FIN DE LA DEFINICIÓN DE DATOS ---
+    //Creamos un metodo para ir a la derecha
+    public static void derecha(){
+        if (habitacionActual == habitaciones.length - 1){
+            System.out.println("No hay mas habitaciones a la derecha. Solo puedes ir a la izquierda");
+        }else {
+            System.out.println(habitaciones[habitacionActual + 1]);
+            habitacionActual = habitacionActual + 1;
+        }
+
+    }
+
+    //Creamos un metodo para ir a la izquierda
+    public static void  izquierda(){
+            if(habitacionActual == habitaciones.length - 1) {
+                System.out.println("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
+            }else {
+                System.out.println(habitaciones[habitacionActual - 1]);
+                habitacionActual = habitacionActual - 1;
+            }
+    }
 
 
     public static void main(String[] args) {
         // Puedes utilizar la clase MiEntradaSalida, que viviría en el paquete io
         Scanner sc = new Scanner(System.in);
         boolean jugando = true;
-        int posicionActual = 1;
         System.out.println("'LA CURA'");
         System.out.println("------------------------------------------");
 
         System.out.println(descripcionJuego);
 
-        System.out.println(habitaciones[posicionActual]);
+        System.out.println(habitaciones[habitacionActual]);
 
         System.out.println("Las opciones son ayuda, mirar, inventario, \n" +
                 "ir derecha, ir izquierda, coger [objeto] y salir");
@@ -111,12 +137,10 @@ public class Juego {
              */
             switch (comando.toLowerCase()){
                 case "ir derecha":
-                    System.out.println(habitaciones[posicionActual + 1]);
-                    posicionActual = posicionActual + 1;
+                    derecha();
                     break;
                 case "ir izquierda":
-                    System.out.println(habitaciones[posicionActual - 1]);
-                    posicionActual = posicionActual - 1;
+                    izquierda();
                     break;
                 case "mirar":
                     System.out.println(habitaciones[habitacionActual]);
