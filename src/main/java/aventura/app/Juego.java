@@ -72,12 +72,12 @@ public class Juego {
             {"llave inglesa", null},           // Objetos en Habitación 0
             {null, null},           // Objetos en Habitación 1
             {"taza", null},         // Objetos en Habitación 2
-            {null, null},           // Objetos en Habitación 3
+            {"radio", "tarjeta de acceso"},           // Objetos en Habitación 3
             {null, null},           // Objetos en Habitación 4
             {null, null},           // Objetos en habitación 5
-            {null, null},           // Objetos en Habitación 6
+            {"jeringuilla", "probeta"},           // Objetos en Habitación 6
             {null, null},           // Objetos en Habitación 7
-            {null, null},           // Objetos en Habitación 8
+            {null, "alubias en lata"},           // Objetos en Habitación 8
 
     };
 
@@ -138,7 +138,7 @@ public static void cogerObjetos() {
     Scanner sc = new Scanner(System.in);
     //llamar a listar objetos
     int numeroObjetos = listarObjetos();
-
+    boolean objetoEncontrado = false;
     if (numeroObjetos == 0) { //Si no hay objetos en la sala decirlo y sacarlo de aqui
         System.out.println("No hay objetos aquí");
         return;
@@ -146,20 +146,22 @@ public static void cogerObjetos() {
     //almacenar el objeto que el jugador quiere coger
     System.out.println("¿Que objeto quieres coger?");
     String objeto = sc.nextLine();
-    for (int i = 0; i < objetosMapa[habitacionActual].length; i++) {
+    for (int i = 0; i < objetosMapa[habitacionActual].length && !objetoEncontrado; i++) {
         if (objetosMapa[habitacionActual][i] != null) {
             if (objetosMapa[habitacionActual][i].equalsIgnoreCase(objeto)) {
+                objetoEncontrado = true;
                 if (guardarObjeto(objeto)) {
                     System.out.println("Has cogido " + objeto);
                     objetosMapa[habitacionActual][i] = null; //Eliminamos el objeto del mapa
                 }
 
                 return;
-            } else System.out.println("No se ha encontrado ese objeto.");
-        } else { //Miramos si el objeto no esta en la habitación
-            System.out.println("Ese objeto no esta en esta habitación");
-            return;
+            }
         }
+    }
+
+    if (!objetoEncontrado){
+        System.out.println("Ese objeto no esta en esta habitación");
     }
 
 }
@@ -181,15 +183,15 @@ private static boolean guardarObjeto(String objeto) {
     for (int i = 0; i < inventario.length; i++) {
         if (inventario[i] != null) ocupado++;
     }
+    if (ocupado == inventario.length) {
+        System.out.println("No tienes espacio en el inventario");
+        return false;
+    }
 
     for (int i = 0; i < inventario.length; i++) {
         if (inventario[i] == null) {
             inventario[i] = objeto;
             return true;
-        } else if (inventario[i] != null) {
-            if (ocupado == inventario.length) {
-                System.out.println("No tienes espacio en el inventario");
-            }
         }
     }
 
