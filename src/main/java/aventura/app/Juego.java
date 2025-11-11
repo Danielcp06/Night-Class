@@ -77,7 +77,7 @@ public class Juego {
             {null, null},           // Objetos en habitación 5
             {"jeringuilla", "probeta"},           // Objetos en Habitación 6
             {null, null},           // Objetos en Habitación 7
-            {null, "alubias en lata"},           // Objetos en Habitación 8
+            {"alubias en lata", null},           // Objetos en Habitación 8
 
     };
 
