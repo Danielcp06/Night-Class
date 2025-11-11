@@ -130,17 +130,6 @@ public static void izquierda() {
         habitacionActual = habitacionActual - 1;
     }
 }
-    /**
-     * Metodo para ir a la izquierda
-     */
-    public static void  izquierda(){
-            if(habitacionActual == habitaciones.length - 1) {
-                System.out.println("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
-            }else {
-                System.out.println(habitaciones[habitacionActual - 1]);
-                habitacionActual = habitacionActual - 1;
-            }
-    }
 
 /*+
  * Metodo para coger objetos
