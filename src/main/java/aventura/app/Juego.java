@@ -71,7 +71,7 @@ public class Juego {
     public static String[][] objetosMapa = {
             {"llave inglesa", null},           // Objetos en Habitación 0
             {null, null},           // Objetos en Habitación 1
-            {null, "taza"},         // Objetos en Habitación 2
+            {"taza", null},         // Objetos en Habitación 2
             {null, null},           // Objetos en Habitación 3
             {null, null},           // Objetos en Habitación 4
             {null, null},           // Objetos en habitación 5
@@ -84,22 +84,52 @@ public class Juego {
     // El inventario del jugador. Tamaño fijo.
     private static String[] inventario = new String[5];
 
-    // Variable que guarda la posición actual del jugador
-    private static int habitacionActual = 0; // Empezamos en la primera habitación
-
-    /**
-     * Metodo para ir a la derecha
-     */
-    public static void derecha(){
-        if (habitacionActual == habitaciones.length - 1){
-            System.out.println("No hay mas habitaciones a la derecha. Solo puedes ir a la izquierda");
-        }else {
-            System.out.println(habitaciones[habitacionActual + 1]);
-            habitacionActual = habitacionActual + 1;
+    private static void inventarioActual() {
+        int contador = 0;
+        for (int i = 0; i < inventario.length; i++) {
+            if (inventario[i] != null) {
+                contador++;
+            }
         }
+
+        if (contador == 0) {
+            System.out.println("El inventario está vacío");
+        } else {
+            for (int i = 0; i < inventario.length; i++) {
+                if (inventario[i] != null) {
+                    System.out.println(i+ 1 + ") " + inventario[i]);
+                }
+            }
+        }
+    }
+
+// Variable que guarda la posición actual del jugador
+private static int habitacionActual = 4; // Empezamos en la primera habitación
+
+/**
+ * Metodo para ir a la derecha
+ */
+public static void derecha() {
+    if (habitacionActual == habitaciones.length - 1) {
+        System.out.println("No hay mas habitaciones a la derecha. Solo puedes ir a la izquierda");
+    } else {
+        System.out.println(habitaciones[habitacionActual + 1]);
+        habitacionActual = habitacionActual + 1;
+    }
 
     }
 
+/**
+ * Metodo para ir a la izquierda
+ */
+public static void izquierda() {
+    if (habitacionActual == habitaciones.length - 1) {
+        System.out.println("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
+    } else {
+        System.out.println(habitaciones[habitacionActual - 1]);
+        habitacionActual = habitacionActual - 1;
+    }
+}
     /**
      * Metodo para ir a la izquierda
      */
@@ -112,70 +142,70 @@ public class Juego {
             }
     }
 
-    /*+
-     * Metodo para coger objetos
-     */
-    public static void cogerObjetos(){
-        Scanner sc = new Scanner(System.in);
-        //llamar a listar objetos
-        int numeroObjetos = listarObjetos();
+/*+
+ * Metodo para coger objetos
+ */
+public static void cogerObjetos() {
+    Scanner sc = new Scanner(System.in);
+    //llamar a listar objetos
+    int numeroObjetos = listarObjetos();
 
-        if (numeroObjetos == 0){ //Si no hay objetos en la sala decirlo y sacarlo de aqui
-            System.out.println("No hay objetos aquí");
+    if (numeroObjetos == 0) { //Si no hay objetos en la sala decirlo y sacarlo de aqui
+        System.out.println("No hay objetos aquí");
+        return;
+    }
+    //almacenar el objeto que el jugador quiere coger
+    System.out.println("¿Que objeto quieres coger?");
+    String objeto = sc.nextLine();
+    for (int i = 0; i < objetosMapa[habitacionActual].length; i++) {
+        if (objetosMapa[habitacionActual][i] != null) {
+            if (objetosMapa[habitacionActual][i].equalsIgnoreCase(objeto)) {
+                if (guardarObjeto(objeto)) {
+                    System.out.println("Has cogido " + objeto);
+                    objetosMapa[habitacionActual][i] = null; //Eliminamos el objeto del mapa
+                }
+
+                return;
+            } else System.out.println("No se ha encontrado ese objeto.");
+        } else { //Miramos si el objeto no esta en la habitación
+            System.out.println("Ese objeto no esta en esta habitación");
             return;
         }
-        //almacenar el objeto que el jugador quiere coger
-        System.out.println("¿Que objeto quieres coger?");
-        String objeto = sc.nextLine();
-        for (int i = 0; i < objetosMapa[habitacionActual].length; i++) {
-            if (objetosMapa[habitacionActual][i]!=null) {
-                if (objetosMapa[habitacionActual][i].equalsIgnoreCase(objeto)) {
-                    if (guardarObjeto(objeto)){
-                        System.out.println("Has cogido " + objeto);
-                        objetosMapa[habitacionActual][i] = null; //Eliminamos el objeto del mapa
-                    }
-
-                    return;
-                } else System.out.println("No se ha encontrado ese objeto.");
-            }else { //Miramos si el objeto no esta en la habitación
-                System.out.println("Ese objeto no esta en esta habitación");
-                return;
-            }
-        }
-
     }
 
-    private static int listarObjetos() {
-        int contador = 0;
-        for (int i = 0; i < objetosMapa[habitacionActual].length; i++) {
-            if(objetosMapa[habitacionActual][i] != null){
-                System.out.println(objetosMapa[habitacionActual][i]);
-                contador++;
-            }
-        }
+}
 
-        return contador;
+private static int listarObjetos() {
+    int contador = 0;
+    for (int i = 0; i < objetosMapa[habitacionActual].length; i++) {
+        if (objetosMapa[habitacionActual][i] != null) {
+            System.out.println(objetosMapa[habitacionActual][i]);
+            contador++;
+        }
     }
 
-    private static boolean guardarObjeto(String objeto){
-        int ocupado = 0;
-        for (int i = 0; i < inventario.length; i++) {
-            if (inventario[i]!=null) ocupado++;
-        }
+    return contador;
+}
 
-        for (int i = 0; i < inventario.length; i++) {
-            if (inventario[i] == null){
-                inventario[i]=objeto;
-                return true;
-            } else if (inventario[i]!=null) {
-                if (ocupado== inventario.length){
-                    System.out.println("No tienes espacio en el inventario");
-                }
+private static boolean guardarObjeto(String objeto) {
+    int ocupado = 0;
+    for (int i = 0; i < inventario.length; i++) {
+        if (inventario[i] != null) ocupado++;
+    }
+
+    for (int i = 0; i < inventario.length; i++) {
+        if (inventario[i] == null) {
+            inventario[i] = objeto;
+            return true;
+        } else if (inventario[i] != null) {
+            if (ocupado == inventario.length) {
+                System.out.println("No tienes espacio en el inventario");
             }
         }
-
-        return false;
     }
+
+    return false;
+}
 
     public static void main(String[] args) {
         // Puedes utilizar la clase MiEntradaSalida, que viviría en el paquete io
@@ -194,9 +224,9 @@ public class Juego {
         // TODO 2: Iniciar el bucle principal del juego (game loop)
         while (jugando) {
 
-            // TODO 3: Leer el comando del usuario por teclado
-            System.out.println("¿Qué quieres hacer ahora?: ");
-            String comando = sc.nextLine() ;
+        // TODO 3: Leer el comando del usuario por teclado
+        System.out.println("¿Qué quieres hacer ahora?: ");
+        String comando = sc.nextLine();
 
             /*
             TODO 4: Crear un 'switch' o una estructura 'if-else if'
@@ -204,33 +234,33 @@ public class Juego {
              Debe gestionar como mínimo: "ayuda", "mirar", "inventario",
              "ir derecha", "ir izquierda", "coger [objeto]" y "salir".
              */
-            switch (comando.toLowerCase()){
-                case "ir derecha":
-                    derecha();
-                    break;
-                case "ir izquierda":
-                    izquierda();
-                    break;
-                case "mirar":
-                    System.out.println(habitaciones[habitacionActual]);
-                    listarObjetos();
-                    break;
-                case "salir":
-                    jugando = false;
-                    break;
-                case "ayuda":
-                    System.out.println("Las opciones son ayuda, mirar, inventario,\n" +
-                            "ir derecha, ir izquierda, coger [objeto] y salir \n" );
-                    break;
-                case "coger":
-                    cogerObjetos();
-                    break;
-                case "inventario":
-                    ;
-                    break;
-            }
-
+        switch (comando.toLowerCase()) {
+            case "ir derecha":
+                derecha();
+                break;
+            case "ir izquierda":
+                izquierda();
+                break;
+            case "mirar":
+                System.out.println(habitaciones[habitacionActual]);
+                listarObjetos();
+                break;
+            case "salir":
+                jugando = false;
+                break;
+            case "ayuda":
+                System.out.println("Las opciones son ayuda, mirar, inventario,\n" +
+                        "ir derecha, ir izquierda, coger [objeto] y salir \n");
+                break;
+            case "coger":
+                cogerObjetos();
+                break;
+            case "inventario":
+                inventarioActual();
+                break;
         }
+
+    }
 
         System.out.println("¡Gracias por jugar!");
         sc.close();
