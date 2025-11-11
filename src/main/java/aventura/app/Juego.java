@@ -123,7 +123,7 @@ public static void derecha() {
  * Metodo para ir a la izquierda
  */
 public static void izquierda() {
-    if (habitacionActual == habitaciones.length - 1) {
+    if (habitacionActual == 0) {
         System.out.println("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
     } else {
         System.out.println(habitaciones[habitacionActual - 1]);
