@@ -151,7 +151,7 @@ public static void cogerObjetos() {
             if (objetosMapa[habitacionActual][i].equalsIgnoreCase(objeto)) {
                 objetoEncontrado = true;
                 if (guardarObjeto(objeto)) {
-                    System.out.println("Has cogido " + objeto);
+                    System.out.println("✅ Has cogido " + objeto);
                     objetosMapa[habitacionActual][i] = null; //Eliminamos el objeto del mapa
                 }
 
@@ -184,7 +184,7 @@ private static boolean guardarObjeto(String objeto) {
         if (inventario[i] != null) ocupado++;
     }
     if (ocupado == inventario.length) {
-        System.out.println("No tienes espacio en el inventario");
+        System.out.println("❌ No tienes espacio en el inventario");
         return false;
     }
 
