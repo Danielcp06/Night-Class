@@ -9,5 +9,11 @@ public abstract class Entidad {
         this.nombre = nombre;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
 
+    public String getNombre() {
+        return nombre;
+    }
 }
