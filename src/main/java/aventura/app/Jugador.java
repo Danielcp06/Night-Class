@@ -20,7 +20,9 @@ public class Jugador{
         return habitacionActual;
     }
 
-    public void setHabitacionActual(int habitacionActual) {
-        this.habitacionActual = 4;
+    public void setHabitacionActual(int habitacionSiguiente) {
+        if (habitacionSiguiente >= 0 && habitacionSiguiente <= 8){
+            this.habitacionActual =  habitacionSiguiente;
+        }
     }
 }
