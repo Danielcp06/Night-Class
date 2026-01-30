@@ -5,6 +5,7 @@ public class Habitacion{
     private Objeto[] objetosHabitacion;
     private String descripcion;
 
+
     public Habitacion(String descripcion) {
         this.descripcion = descripcion;
         objetosHabitacion = new Objeto[OBJETOS_MAX];
@@ -12,5 +13,14 @@ public class Habitacion{
 
     public String getDescripcion() {
         return descripcion;
+    }
+
+    public void addObjeto(Objeto o){
+        for (int i = 0; i < objetosHabitacion.length; i++) {
+            if (objetosHabitacion[i] == null){
+                objetosHabitacion[i] = o;
+            }
+
+        }
     }
 }
