@@ -25,4 +25,5 @@ public class Jugador{
             this.habitacionActual =  habitacionSiguiente;
         }
     }
+
 }

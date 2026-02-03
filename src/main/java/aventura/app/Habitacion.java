@@ -15,6 +15,10 @@ public class Habitacion{
         return descripcion;
     }
 
+    public Objeto[] getObjetosHabitacion() {
+        return objetosHabitacion;
+    }
+
     public void addObjeto(Objeto o){
         for (int i = 0; i < objetosHabitacion.length; i++) {
             if (objetosHabitacion[i] == null){
