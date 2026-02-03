@@ -1,5 +1,6 @@
 package aventura.app;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -9,19 +10,19 @@ import java.util.Scanner;
  */
 public class Juego {
 
-    private Jugador j;
+    private final Jugador j;
     private int habitacionActual;//Habitación en la que empezaremos el juego
     private Habitacion[] habitaciones;
     private String descripcionJuego;
 
 
-    public Juego(Jugador j, int habitacionActual) {
-        this.j = j;
+    public Juego(int habitacionActual) {
+        this.j = new Jugador(1);
         this.habitacionActual = habitacionActual;
         this.habitaciones = new Habitacion[3];
     }
 
-    private void inicializar() {
+    public void inicializar() {
         descripcionJuego = "Seis meses después del primer día del apocalipsis, eres J.A Bermudo, un exdetective \n" +
                 "obsesionado con encontrar el \"Protocolo P.R.C\", la clave del brote, de la Dra. Sonia Joao. Tu pista te \n" +
                 "lleva al sellado edificio de la Corporación Miravent, un laberinto silencioso lleno de peligros.\n" +
@@ -46,14 +47,18 @@ public class Juego {
         habitaciones[2] = h2;
     }
 
+    public String getDescripcionJuego() {
+        return descripcionJuego;
+    }
 
-    // El inventario del jugador. Tamaño fijo.
-    private static String[] inventario = new String[5];
+    public Habitacion[] getHabitaciones() {
+        return habitaciones;
+    }
 
-    private static void inventarioActual() {
+    public void inventarioActual() {
         int contador = 0;
-        for (int i = 0; i < inventario.length; i++) {
-            if (inventario[i] != null) {
+        for (int i = 0; i < j.getInventario().length; i++) {
+            if (j.getInventario()[i] != null) {
                 contador++;
             }
         }
@@ -61,9 +66,9 @@ public class Juego {
         if (contador == 0) {
             System.out.println("El inventario está vacío");
         } else {
-            for (int i = 0; i < inventario.length; i++) {
-                if (inventario[i] != null) {
-                    System.out.println(i + 1 + ") " + inventario[i]);
+            for (int i = 0; i < j.getInventario().length; i++) {
+                if (j.getInventario()[i] != null) {
+                    System.out.println(i + 1 + ") " + j.getInventario()[i]);
                 }
             }
         }
@@ -82,7 +87,7 @@ public class Juego {
         if (contadorObjetos == 0) {
             System.out.println("No hay objetos en la habitacion");
         }
-
+        return Arrays.toString(objetosHabitacion);
     }
 
 
@@ -126,14 +131,15 @@ public class Juego {
             }
             //almacenar el objeto que el jugador quiere coger
             System.out.println("¿Que objeto quieres coger?");
-            String objeto = sc.nextLine();
-            for (int i = 0; i < objetosMapa[habitacionActual].length && !objetoEncontrado; i++) {
-                if (objetosMapa[habitacionActual][i] != null) {
-                    if (objetosMapa[habitacionActual][i].equalsIgnoreCase(objeto)) {
+            Objeto objeto = null;
+            String nombreObjeto = sc.nextLine();
+            for (int i = 0; i < habitaciones[habitacionActual].getObjetosHabitacion().length && !objetoEncontrado; i++) {
+                if (habitaciones[habitacionActual].getObjetosHabitacion()[i] != null) {
+                    if (habitaciones[habitacionActual].getObjetosHabitacion()[i].equals(objeto)) {
                         objetoEncontrado = true;
                         if (guardarObjeto(objeto)) {
                             System.out.println("✅ Has cogido " + objeto);
-                            objetosMapa[habitacionActual][i] = null; //Eliminamos el objeto del mapa
+                            habitaciones[habitacionActual].getObjetosHabitacion()[i] = null; //Eliminamos el objeto del mapa
                         }
 
                         return;
@@ -149,9 +155,9 @@ public class Juego {
 
         private int listarObjetos () {
             int contador = 0;
-            for (int i = 0; i < objetosMapa[habitacionActual].length; i++) {
-                if (objetosMapa[habitacionActual][i] != null) {
-                    System.out.println(objetosMapa[habitacionActual][i]);
+            for (int i = 0; i < habitaciones[habitacionActual].getObjetosHabitacion().length; i++) {
+                if (habitaciones[habitacionActual].getObjetosHabitacion()[i] != null) {
+                    System.out.println(habitaciones[habitacionActual].getObjetosHabitacion()[i]);
                     contador++;
                 }
             }
@@ -159,19 +165,19 @@ public class Juego {
             return contador;
         }
 
-        private boolean guardarObjeto (String objeto){
+        private boolean guardarObjeto (Objeto objeto){
             int ocupado = 0;
-            for (int i = 0; i < inventario.length; i++) {
-                if (inventario[i] != null) ocupado++;
+            for (int i = 0; i < j.getInventario().length; i++) {
+                if (j.getInventario()[i] != null) ocupado++;
             }
-            if (ocupado == inventario.length) {
+            if (ocupado == j.getInventario().length) {
                 System.out.println("❌ No tienes espacio en el inventario");
                 return false;
             }
 
-            for (int i = 0; i < inventario.length; i++) {
-                if (inventario[i] == null) {
-                    inventario[i] = objeto;
+            for (int i = 0; i < j.getInventario().length; i++) {
+                if (j.getInventario()[i] == null) {
+                    j.getInventario()[i] = objeto;
                     return true;
                 }
             }
@@ -186,11 +192,12 @@ public class Juego {
             System.out.println("'LA CURA'");
             System.out.println("------------------------------------------");
 
-            Juego t = new Juego("Ruben", 4);
+            Juego t = new Juego(1);
+            t.inicializar();
 
-            System.out.println(descripcionJuego);
+            System.out.println(t.descripcionJuego);
 
-            System.out.println(habitaciones[habitacionActual].getDescripcion());
+            System.out.println(t.habitaciones[t.habitacionActual].getDescripcion());
 
             System.out.println("Las opciones son ayuda, mirar, inventario, \n" +
                     "ir derecha, ir izquierda, coger [objeto] y salir");
@@ -216,7 +223,7 @@ public class Juego {
                         t.izquierda();
                         break;
                     case "mirar":
-                        System.out.println(habitaciones[habitacionActual]);
+                        System.out.println(t.habitaciones[t.habitacionActual]);
                         t.listarObjetos();
                         break;
                     case "salir":
@@ -230,7 +237,7 @@ public class Juego {
                         t.cogerObjetos();
                         break;
                     case "inventario":
-                        inventarioActual();
+                        t.inventarioActual();
                         break;
                 }
 
