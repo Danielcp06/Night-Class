@@ -46,13 +46,7 @@ public class Juego {
         habitaciones[2] = h2;
     }
 
-    // Los objetos que hay en cada habitación.
-    public static String[][] objetosMapa = {
-            {"llave inglesa", null},           // Objetos en Habitación 0
-            {null, null},           // Objetos en Habitación 1
-            {"taza", null},         // Objetos en Habitación 2
 
-    };
 
     // El inventario del jugador. Tamaño fijo.
     private static String[] inventario = new String[5];
@@ -74,6 +68,22 @@ public class Juego {
                 }
             }
         }
+    }
+
+    public String mirar(){
+        System.out.println(habitaciones[habitacionActual]);
+        Objeto[] objetosHabitacion = habitaciones[habitacionActual].getObjetosHabitacion();
+        int contadorObjetos = 0;
+        for (int i = 0; i < objetosHabitacion.length; i++) {
+            if (objetosHabitacion[i] != null){
+                System.out.println(objetosHabitacion[i]);
+                contadorObjetos++;
+            }
+        }
+        if (contadorObjetos == 0){
+            System.out.println("No hay objetos en la habitacion");
+        }
+
     }
 
 

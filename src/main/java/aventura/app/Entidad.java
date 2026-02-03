@@ -16,4 +16,9 @@ public abstract class Entidad {
     public String getNombre() {
         return nombre;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }
