@@ -23,6 +23,7 @@ public class Habitacion{
         for (int i = 0; i < objetosHabitacion.length; i++) {
             if (objetosHabitacion[i] == null){
                 objetosHabitacion[i] = o;
+                return;
             }
 
         }

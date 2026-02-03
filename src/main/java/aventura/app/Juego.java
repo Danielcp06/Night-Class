@@ -36,6 +36,8 @@ public class Juego {
                 "\n" + "“Protocolo interno de emergencia activado. No abandonar el edificio.”");
 
         habitaciones[0] = h0;
+        Llave l = new Llave("Una llave que parece oxidada", "Llave oxidada",true,null);
+        h0.addObjeto(l);
         Habitacion h1 = new Habitacion("RECEPCIÓN:estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
                 "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
                 "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
@@ -74,14 +76,43 @@ public class Juego {
         }
     }
 
+    /**
+     * Busca un objeto por su nombre en la habitación actual y en el inventario.
+     * @param nombre El nombre del objeto a buscar.
+     * @return El objeto encontrado o null si no existe en ningún sitio.
+     */
+    private Objeto buscarObjeto(String nombre) {
+        // 1. Obtener la habitación donde está el jugador
+        int posActual = j.getHabitacionActual();
+        Habitacion sala = habitaciones[posActual];
+
+        // 2. Buscar en los objetos de la HABITACIÓN
+        for (Objeto obj : sala.getObjetosHabitacion()) {
+            if (obj != null && obj.getNombre().equalsIgnoreCase(nombre)) {
+                return obj; // Encontrado en el suelo
+            }
+        }
+
+        // 3. Buscar en el INVENTARIO del jugador
+        for (Objeto obj : j.getInventario()) {
+            if (obj != null && obj.getNombre().equalsIgnoreCase(nombre)) {
+                return obj; // Encontrado en la mochila
+            }
+        }
+
+        // 4. Si llegamos aquí, es que no está en ningún lado
+        return null;
+    }
+
     public String mirar() {
-        System.out.println(habitaciones[habitacionActual]);
+        System.out.println(habitaciones[habitacionActual].getDescripcion());
         Objeto[] objetosHabitacion = habitaciones[habitacionActual].getObjetosHabitacion();
         int contadorObjetos = 0;
         for (int i = 0; i < objetosHabitacion.length; i++) {
             if (objetosHabitacion[i] != null) {
                 System.out.println(objetosHabitacion[i]);
                 contadorObjetos++;
+                break;
             }
         }
         if (contadorObjetos == 0) {
@@ -124,29 +155,26 @@ public class Juego {
             Scanner sc = new Scanner(System.in);
             //llamar a listar objetos
             int numeroObjetos = listarObjetos();
-            boolean objetoEncontrado = false;
+            boolean objetoEncontrado = true;
             if (numeroObjetos == 0) { //Si no hay objetos en la sala decirlo y sacarlo de aqui
                 System.out.println("No hay objetos aquí");
                 return;
             }
             //almacenar el objeto que el jugador quiere coger
             System.out.println("¿Que objeto quieres coger?");
-            Objeto objeto = null;
             String nombreObjeto = sc.nextLine();
-            for (int i = 0; i < habitaciones[habitacionActual].getObjetosHabitacion().length && !objetoEncontrado; i++) {
+            Objeto objeto = buscarObjeto(nombreObjeto);
+            for (int i = 0; i < habitaciones[habitacionActual].getObjetosHabitacion().length; i++) {
                 if (habitaciones[habitacionActual].getObjetosHabitacion()[i] != null) {
                     if (habitaciones[habitacionActual].getObjetosHabitacion()[i].equals(objeto)) {
-                        objetoEncontrado = true;
                         if (guardarObjeto(objeto)) {
                             System.out.println("✅ Has cogido " + objeto);
                             habitaciones[habitacionActual].getObjetosHabitacion()[i] = null; //Eliminamos el objeto del mapa
                         }
-
                         return;
                     }
                 }
             }
-
             if (!objetoEncontrado) {
                 System.out.println("Ese objeto no esta en esta habitación");
             }
@@ -223,7 +251,7 @@ public class Juego {
                         t.izquierda();
                         break;
                     case "mirar":
-                        System.out.println(t.habitaciones[t.habitacionActual]);
+                        t.mirar();
                         t.listarObjetos();
                         break;
                     case "salir":
