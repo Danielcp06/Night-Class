@@ -1,4 +1,4 @@
-package aventura.app;
+package domain;
 
 public abstract class Entidad {
     private String descripcion;

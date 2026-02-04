@@ -1,4 +1,4 @@
-package aventura.app;
+package domain;
 
 public class Habitacion{
     private final int OBJETOS_MAX = 5;

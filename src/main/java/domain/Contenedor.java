@@ -1,4 +1,4 @@
-package aventura.app;
+package domain;
 
 public class Contenedor extends Mueble implements Abrible {
     private String codigoNecesario; // Si es null, se abre sin llave.

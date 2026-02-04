@@ -1,4 +1,4 @@
-package aventura.app;
+package domain;
 
 public class Llave extends Item {
     private String codigoDeSeguridad;

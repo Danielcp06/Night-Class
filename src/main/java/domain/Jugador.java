@@ -1,11 +1,11 @@
-package aventura.app;
+package domain;
 
 public class Jugador{
     public final static int TAM_INV = 10;
     private Objeto[] inventario;
     private int habitacionActual;
 
-    public Jugador(int habitacionActual) {
+    public Jugador() {
         this.inventario = new Objeto[TAM_INV];
         setHabitacionActual(habitacionActual);
     }

@@ -1,5 +1,10 @@
 package aventura.app;
 
+import domain.Habitacion;
+import domain.Jugador;
+import domain.Llave;
+import domain.Objeto;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -17,7 +22,7 @@ public class Juego {
 
 
     public Juego(int habitacionActual) {
-        this.j = new Jugador(1);
+        this.j = new Jugador();
         this.habitacionActual = habitacionActual;
         this.habitaciones = new Habitacion[3];
     }
@@ -104,6 +109,21 @@ public class Juego {
         return null;
     }
 
+    public Objeto buscarObjetoHabitacion(String nombre){
+        // 1. Obtener la habitación donde está el jugador
+        int posActual = j.getHabitacionActual();
+        Habitacion sala = habitaciones[posActual];
+
+        // Buscar en los objetos de la HABITACIÓN
+        for (Objeto obj : sala.getObjetosHabitacion()) {
+            if (obj != null && obj.getNombre().equalsIgnoreCase(nombre)) {
+                return obj; // Encontrado en el suelo
+            }
+
+        }
+        return null;
+    }
+
     public String mirar() {
         System.out.println(habitaciones[habitacionActual].getDescripcion());
         Objeto[] objetosHabitacion = habitaciones[habitacionActual].getObjetosHabitacion();
@@ -120,7 +140,6 @@ public class Juego {
         }
         return Arrays.toString(objetosHabitacion);
     }
-
 
     /**
      * Metodo para ir a la derecha
@@ -155,7 +174,6 @@ public class Juego {
             Scanner sc = new Scanner(System.in);
             //llamar a listar objetos
             int numeroObjetos = listarObjetos();
-            boolean objetoEncontrado = true;
             if (numeroObjetos == 0) { //Si no hay objetos en la sala decirlo y sacarlo de aqui
                 System.out.println("No hay objetos aquí");
                 return;
@@ -163,23 +181,35 @@ public class Juego {
             //almacenar el objeto que el jugador quiere coger
             System.out.println("¿Que objeto quieres coger?");
             String nombreObjeto = sc.nextLine();
-            Objeto objeto = buscarObjeto(nombreObjeto);
-            for (int i = 0; i < habitaciones[habitacionActual].getObjetosHabitacion().length; i++) {
-                if (habitaciones[habitacionActual].getObjetosHabitacion()[i] != null) {
-                    if (habitaciones[habitacionActual].getObjetosHabitacion()[i].equals(objeto)) {
-                        if (guardarObjeto(objeto)) {
-                            System.out.println("✅ Has cogido " + objeto);
-                            habitaciones[habitacionActual].getObjetosHabitacion()[i] = null; //Eliminamos el objeto del mapa
-                        }
-                        return;
-                    }
+            Objeto objeto = buscarObjetoHabitacion(nombreObjeto);
+            if (objeto != null) {
+
+                if (guardarObjeto(objeto)){
+                    System.out.println("✅ Has cogido " + objeto);
+                    eliminarObjetoDeHabitacion(objeto); //Eliminamos el objeto del mapa
                 }
-            }
-            if (!objetoEncontrado) {
+            }else{
                 System.out.println("Ese objeto no esta en esta habitación");
             }
 
         }
+
+    /**
+     * Elimina un objeto específico del array de la habitación donde está el jugador.
+     */
+    private void eliminarObjetoDeHabitacion(Objeto objABorrar) {
+        // 1. Obtenemos el array de objetos de la sala actual
+        Objeto[] objetosEnSala = habitaciones[j.getHabitacionActual()].getObjetosHabitacion();
+
+        // 2. Buscamos el objeto exacto por referencia
+        for (int i = 0; i < objetosEnSala.length; i++) {
+            if (objetosEnSala[i] == objABorrar) {
+                // 3. Ponemos la posición a null para que "desaparezca"
+                objetosEnSala[i] = null;
+                return; // Ya lo hemos borrado, salimos del método
+            }
+        }
+    }
 
         private int listarObjetos () {
             int contador = 0;
