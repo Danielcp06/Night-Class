@@ -11,8 +11,8 @@ public class Lija extends Item implements Combinable{
     public Objeto combinar(Item otro) throws ObjetoNoCombinableException {
         if (otro != null){
             if(otro instanceof LlaveOxidada llaveOxidada){
-                llaveOxidada.combinar(this);
-                return new Llave("Una llave con un dorado reluciente", "Llave", true,"11");
+                return llaveOxidada.combinar(this);
+
             }
         }
         throw new ObjetoNoCombinableException("Falta algun objeto para poder combinar");
