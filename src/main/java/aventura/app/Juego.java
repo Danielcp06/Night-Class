@@ -40,14 +40,14 @@ public class Juego {
                 "\n" + "“Protocolo interno de emergencia activado. No abandonar el edificio.”");
 
         habitaciones[0] = h0;
-        Llave l = new Llave("Una llave que parece oxidada", "Llave oxidada",true,null);
+        Llave l = new Llave("Una llave que parece oxidada", "Llave oxidada", true, null);
         h0.addObjeto(l);
         Habitacion h1 = new Habitacion("RECEPCIÓN:estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
                 "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
                 "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
                 "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n");
         habitaciones[1] = h1;
-        Nota nota1 = new Nota("Nota","Un papel arrugado","Me siento alcapone con el x47 esrtos cabrones me odian pero ninguno se atrebe ");
+        Nota nota1 = new Nota("Nota", "Un papel arrugado", "Me siento alcapone con el x47 esrtos cabrones me odian pero ninguno se atrebe ");
         h1.addObjeto(nota1);
         Habitacion h2 = new Habitacion("LABORATORIO DE INVESTIGACIÓN:la puerta está trabada a medias, dejando un espacio estrecho para entrar. Luces rojas pulsantes bañan la sala. Tubos de ensayo rotos y frascos marcados con símbolos biológicos cubren las mesas. En el fondo, una cámara de contención de vidrio está agrietada desde dentro.\n" +
                 "Un monitor reproduce una grabación detenida en una frase:\n" +
@@ -82,7 +82,7 @@ public class Juego {
         }
     }
 
-    public void ejecutarExaminar(String nombre) {
+    public void leer(String nombre) throws objetoNoEncontradoException {
         Objeto[] inventario = j.getInventario();
         Objeto encontrado = null;
         for (int i = 0; i < inventario.length; i++) {
@@ -94,8 +94,8 @@ public class Juego {
 
         // 3. Si al final del for 'encontrado' sigue siendo null, es que no lo tenemos
         if (encontrado == null) {
-            System.out.println("No tienes ese objeto en tu inventario. Cógelo primero.");
-            return;
+            throw new objetoNoEncontradoException("No tienes ningun objeto de ese tipo en tu inventario. \n" +
+                    "Encuentralo primero.");
         }
 
         // 4. Si lo tenemos, mostramos su descripción
@@ -111,6 +111,7 @@ public class Juego {
 
     /**
      * Busca un objeto por su nombre en la habitación actual y en el inventario.
+     *
      * @param nombre El nombre del objeto a buscar.
      * @return El objeto encontrado o null si no existe en ningún sitio.
      */
@@ -194,32 +195,32 @@ public class Juego {
     }
 
 
-        /*+
-         * Metodo para coger objetos
-         */
-        public void cogerObjetos () throws objetoNoEncontradoException {
-            Scanner sc = new Scanner(System.in);
-            //llamar a listar objetos
-            int numeroObjetos = listarObjetos();
-            if (numeroObjetos == 0) { //Si no hay objetos en la sala decirlo y sacarlo de aqui
-                System.out.println("No hay objetos aquí");
-                return;
-            }
-            //almacenar el objeto que el jugador quiere coger
-            System.out.println("¿Que objeto quieres coger?");
-            String nombreObjeto = sc.nextLine();
-            Objeto objeto = buscarObjetoHabitacion(nombreObjeto);
-            if (objeto != null) {
-
-                if (guardarObjeto(objeto)){
-                    System.out.println("✅ Has cogido " + objeto);
-                    eliminarObjetoDeHabitacion(objeto); //Eliminamos el objeto del mapa
-                }
-            }else{
-                System.out.println("Ese objeto no esta en esta habitación");
-            }
-
+    /*+
+     * Metodo para coger objetos
+     */
+    public void cogerObjetos() throws objetoNoEncontradoException {
+        Scanner sc = new Scanner(System.in);
+        //llamar a listar objetos
+        int numeroObjetos = listarObjetos();
+        if (numeroObjetos == 0) { //Si no hay objetos en la sala decirlo y sacarlo de aqui
+            System.out.println("No hay objetos aquí");
+            return;
         }
+        //almacenar el objeto que el jugador quiere coger
+        System.out.println("¿Que objeto quieres coger?");
+        String nombreObjeto = sc.nextLine();
+        Objeto objeto = buscarObjetoHabitacion(nombreObjeto);
+        if (objeto != null) {
+
+            if (guardarObjeto(objeto)) {
+                System.out.println("✅ Has cogido " + objeto);
+                eliminarObjetoDeHabitacion(objeto); //Eliminamos el objeto del mapa
+            }
+        } else {
+            System.out.println("Ese objeto no esta en esta habitación");
+        }
+
+    }
 
     /**
      * Elimina un objeto específico del array de la habitación donde está el jugador.
@@ -238,61 +239,61 @@ public class Juego {
         }
     }
 
-        private int listarObjetos () {
-            int contador = 0;
-            for (int i = 0; i < habitaciones[habitacionActual].getObjetosHabitacion().length; i++) {
-                if (habitaciones[habitacionActual].getObjetosHabitacion()[i] != null) {
-                    System.out.println(habitaciones[habitacionActual].getObjetosHabitacion()[i]);
-                    contador++;
-                }
+    private int listarObjetos() {
+        int contador = 0;
+        for (int i = 0; i < habitaciones[habitacionActual].getObjetosHabitacion().length; i++) {
+            if (habitaciones[habitacionActual].getObjetosHabitacion()[i] != null) {
+                System.out.println(habitaciones[habitacionActual].getObjetosHabitacion()[i]);
+                contador++;
             }
-
-            return contador;
         }
 
-        private boolean guardarObjeto (Objeto objeto){
-            int ocupado = 0;
-            for (int i = 0; i < j.getInventario().length; i++) {
-                if (j.getInventario()[i] != null) ocupado++;
-            }
-            if (ocupado == j.getInventario().length) {
-                System.out.println("❌ No tienes espacio en el inventario");
-                return false;
-            }
+        return contador;
+    }
 
-            for (int i = 0; i < j.getInventario().length; i++) {
-                if (j.getInventario()[i] == null) {
-                    j.getInventario()[i] = objeto;
-                    return true;
-                }
-            }
-
+    private boolean guardarObjeto(Objeto objeto) {
+        int ocupado = 0;
+        for (int i = 0; i < j.getInventario().length; i++) {
+            if (j.getInventario()[i] != null) ocupado++;
+        }
+        if (ocupado == j.getInventario().length) {
+            System.out.println("❌ No tienes espacio en el inventario");
             return false;
         }
 
-        public static void main (String[]args){
-            // Puedes utilizar la clase MiEntradaSalida, que viviría en el paquete io
-            Scanner sc = new Scanner(System.in);
-            boolean jugando = true;
-            System.out.println("'LA CURA'");
-            System.out.println("------------------------------------------");
+        for (int i = 0; i < j.getInventario().length; i++) {
+            if (j.getInventario()[i] == null) {
+                j.getInventario()[i] = objeto;
+                return true;
+            }
+        }
 
-            Juego t = new Juego(1);
-            t.inicializar();
+        return false;
+    }
 
-            System.out.println(t.descripcionJuego);
+    public static void main(String[] args) {
+        // Puedes utilizar la clase MiEntradaSalida, que viviría en el paquete io
+        Scanner sc = new Scanner(System.in);
+        boolean jugando = true;
+        System.out.println("'LA CURA'");
+        System.out.println("------------------------------------------");
 
-            System.out.println(t.habitaciones[t.habitacionActual].getDescripcion());
+        Juego t = new Juego(1);
+        t.inicializar();
 
-            System.out.println("Las opciones son ayuda, mirar, inventario, \n" +
-                    "ir derecha, ir izquierda, coger [objeto] y salir");
+        System.out.println(t.descripcionJuego);
 
-            // TODO 2: Iniciar el bucle principal del juego (game loop)
-            while (jugando) {
+        System.out.println(t.habitaciones[t.habitacionActual].getDescripcion());
 
-                // TODO 3: Leer el comando del usuario por teclado
-                System.out.println("¿Qué quieres hacer ahora?: ");
-                String comando = sc.nextLine();
+        System.out.println("Las opciones son ayuda, mirar, inventario, \n" +
+                "ir derecha, ir izquierda, coger [objeto] y salir");
+
+        // TODO 2: Iniciar el bucle principal del juego (game loop)
+        while (jugando) {
+
+            // TODO 3: Leer el comando del usuario por teclado
+            System.out.println("¿Qué quieres hacer ahora?: ");
+            String comando = sc.nextLine();
 
             /*
             TODO 4: Crear un 'switch' o una estructura 'if-else if'
@@ -301,50 +302,58 @@ public class Juego {
              "ir derecha", "ir izquierda", "coger [objeto]" y "salir".
              */
 
-                switch (comando.toLowerCase()) {
+            switch (comando.toLowerCase()) {
 
-                    case "ir derecha":
-                        try {
-                            t.derecha();
-                            break;
-                        }catch (noHayMasHabitacionesException e){
-                            System.out.println(e.getMessage());
-                        }
-                    case "ir izquierda":
-                        try{
-                            t.izquierda();
-                            break;
-                    }catch (noHayMasHabitacionesException e){
+                case "ir derecha":
+                    try {
+                        t.derecha();
+                        break;
+                    } catch (noHayMasHabitacionesException e) {
                         System.out.println(e.getMessage());
                     }
-                    case "mirar":
-                        t.mirar();
-                        t.listarObjetos();
+                case "ir izquierda":
+                    try {
+                        t.izquierda();
                         break;
-                    case "salir":
-                        jugando = false;
+                    } catch (noHayMasHabitacionesException e) {
+                        System.out.println(e.getMessage());
+                    }
+                case "mirar":
+                    t.mirar();
+                    t.listarObjetos();
+                    break;
+                case "salir":
+                    jugando = false;
+                    break;
+                case "ayuda":
+                    System.out.println("Las opciones son ayuda, mirar, inventario,\n" +
+                            "ir derecha, ir izquierda, coger [objeto] y salir \n");
+                    break;
+                case "coger":
+                    try {
+                        t.cogerObjetos();
+                    } catch (objetoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case "inventario":
+                    t.inventarioActual();
+                    break;
+                case "leer":
+                    try {
+                        t.leer("Nota");
                         break;
-                    case "ayuda":
-                        System.out.println("Las opciones son ayuda, mirar, inventario,\n" +
-                                "ir derecha, ir izquierda, coger [objeto] y salir \n");
-                        break;
-                    case "coger":
-                        try {
-                            t.cogerObjetos();
-                        } catch (objetoNoEncontradoException e) {
-                            System.out.println(e.getMessage());
-                        }
-                        break;
-                    case "inventario":
-                        t.inventarioActual();
-                        break;
-                }
+                    } catch (objetoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
 
             }
 
-            System.out.println("¡Gracias por jugar!");
-            sc.close();
         }
+
+        System.out.println("¡Gracias por jugar!");
+        sc.close();
+    }
 
     /*
     (Opcional - Buenas Prácticas)
@@ -353,4 +362,4 @@ public class Juego {
     private static void procesarComandoCoger(String comando) { ... }
     private static void mostrarInfoHabitacion() { ... }
     */
-    }
+}
