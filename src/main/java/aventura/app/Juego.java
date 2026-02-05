@@ -47,7 +47,8 @@ public class Juego {
                 "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
                 "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n");
         habitaciones[1] = h1;
-        Nota nota1 = new Nota("Nota","Un papel arrugado"," ");
+        Nota nota1 = new Nota("Nota","Un papel arrugado","Me siento alcapone con el x47 esrtos cabrones me odian pero ninguno se atrebe ");
+        h1.addObjeto(nota1);
         Habitacion h2 = new Habitacion("LABORATORIO DE INVESTIGACIÓN:la puerta está trabada a medias, dejando un espacio estrecho para entrar. Luces rojas pulsantes bañan la sala. Tubos de ensayo rotos y frascos marcados con símbolos biológicos cubren las mesas. En el fondo, una cámara de contención de vidrio está agrietada desde dentro.\n" +
                 "Un monitor reproduce una grabación detenida en una frase:\n" +
                 "\n" + "“¡Aún no está listo para la exposición humana!”");
@@ -139,14 +140,14 @@ public class Juego {
     public Objeto buscarObjetoHabitacion(String nombre) throws objetoNoEncontradoException {
         // 1. Obtener la habitación donde está el jugador
         int posActual = j.getHabitacionActual();
-        Habitacion sala = habitaciones[posActual];
+        Habitacion sala = habitaciones[habitacionActual];
 
         // Buscar en los objetos de la HABITACIÓN
-        for (Objeto obj : sala.getObjetosHabitacion()) {
-            if (obj != null && obj.getNombre().equalsIgnoreCase(nombre)) {
-                return obj; // Encontrado en el suelo
+        Objeto[] obj = sala.getObjetosHabitacion();
+        for (int i = 0; i < sala.getObjetosHabitacion().length; i++) {
+            if (obj[i] != null && obj[i].getNombre().equalsIgnoreCase(nombre)) {
+                return obj[i]; // Encontrado en el suelo
             }
-
         }
         throw new objetoNoEncontradoException("Ese objeto no esta en la habitacion");
     }
@@ -157,7 +158,6 @@ public class Juego {
         int contadorObjetos = 0;
         for (int i = 0; i < objetosHabitacion.length; i++) {
             if (objetosHabitacion[i] != null) {
-                System.out.println(objetosHabitacion[i]);
                 contadorObjetos++;
                 break;
             }
