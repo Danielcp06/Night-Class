@@ -13,18 +13,21 @@ import java.util.Scanner;
  */
 public class Juego {
 
+    // Atributos de la clase: el jugador, la ubicación actual, el mapa y la historia
     private final Jugador j;
     private int habitacionActual;//Habitación en la que empezaremos el juego
     private Habitacion[] habitaciones;
     private String descripcionJuego;
 
 
+    // Constructor: Inicializa al jugador y reserva espacio para 3 habitaciones
     public Juego(int habitacionActual) {
         this.j = new Jugador();
         this.habitacionActual = habitacionActual;
         this.habitaciones = new Habitacion[3];
     }
 
+    // Configura el escenario inicial, crea las habitaciones y coloca los objetos
     public void inicializar() {
         descripcionJuego = "Seis meses después del primer día del apocalipsis, eres J.A Bermudo, un exdetective \n" +
                 "obsesionado con encontrar el \"Protocolo P.R.C\", la clave del brote, de la Dra. Sonia Joao. Tu pista te \n" +
@@ -33,6 +36,7 @@ public class Juego {
                 "a tu primera elección crucial: sala del servicio de mantenimiento (Izquierda) o las escaleras de servicio (Derecha) \n" +
                 "hacia niveles inferiores. Tu supervivencia depende de la información que encuentres en cada sala. \n";
 
+        // Configuración de la Habitación 0 (Sala de Descanso)
         Habitacion h0 = new Habitacion("SALA DE DESCANSO:Una cafetera queda encendida, burbujeando un café quemado con olor rancio. Sillas volcadas y bandejas con comida a medio comer sugieren una interrupción brusca.\n" +
                 " Hay casilleros abiertos: dentro hay pertenencias personales, fotos de familia y tarjetas de acceso.\n" +
                 " En una mesa, un móvil vibra sin parar, mostrando una notificación repetida:\n" +
@@ -41,6 +45,8 @@ public class Juego {
         habitaciones[0] = h0;
         LlaveOxidada l = new LlaveOxidada("Una llave que parece oxidada", "Llave oxidada", true);
         h0.addObjeto(l);
+
+        // Configuración de la Habitación 1 (Recepción)
         Habitacion h1 = new Habitacion("RECEPCIÓN:estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
                 "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
                 "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
@@ -211,8 +217,6 @@ public class Juego {
             j.inventarioActual();
             return;
         }
-
-        j.inventarioActual();
         Scanner sc = new Scanner(System.in);
 
         // 2. Pedir nombres de los objetos (Strings)
@@ -258,8 +262,6 @@ public class Juego {
             System.err.println("Uno de los dos objetos no se ha encontrado en tu inventario.");
         }
     }
-
-
 
     /*+
      * Metodo para coger objetos
