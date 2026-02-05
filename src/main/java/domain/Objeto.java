@@ -1,6 +1,6 @@
-package aventura.app;
+package domain;
 
-public abstract class Objeto extends Entidad{
+public abstract class Objeto extends Entidad {
     private boolean visible;
 
     public Objeto(String descripcion, String nombre, boolean visible) {
