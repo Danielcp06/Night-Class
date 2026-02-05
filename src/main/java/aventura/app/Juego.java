@@ -1,8 +1,9 @@
 package aventura.app;
 
-import Exceptions.noHayMasHabitacionesException;
-import Exceptions.objetoNoCogibleException;
-import Exceptions.objetoNoEncontradoException;
+import Exceptions.InventarioVacioException;
+import Exceptions.NoHayMasHabitacionesException;
+import Exceptions.ObjetoNoCogibleException;
+import Exceptions.ObjetoNoEncontradoException;
 import domain.*;
 
 import java.util.Arrays;
@@ -56,6 +57,9 @@ public class Juego {
                 "Un monitor reproduce una grabación detenida en una frase:\n" +
                 "\n" + "“¡Aún no está listo para la exposición humana!”");
         habitaciones[2] = h2;
+        Lija lija = new Lija("Una lija aspera que parece que sirve para quitar oxido","Lija", true);
+        Contenedor ropero = new Contenedor("Ropero","Un ropero de madera que parece cerrado",null,lija);
+        h2.addObjeto(ropero);
     }
 
     public String getDescripcionJuego() {
@@ -66,50 +70,29 @@ public class Juego {
         return habitaciones;
     }
 
-    public void inventarioActual() {
-        int contador = 0;
-        for (int i = 0; i < j.getInventario().length; i++) {
-            if (j.getInventario()[i] != null) {
-                contador++;
-            }
-        }
-
-        if (contador == 0) {
-            System.out.println("El inventario está vacío");
-        } else {
-            for (int i = 0; i < j.getInventario().length; i++) {
-                if (j.getInventario()[i] != null) {
-                    System.out.println(i + 1 + ") " + j.getInventario()[i]);
-                }
-            }
-        }
+    public Jugador getJ() {
+        return j;
     }
 
-    public void leer(String nombre) throws objetoNoEncontradoException {
-        Objeto[] inventario = j.getInventario();
+    public void leer() throws ObjetoNoEncontradoException, InventarioVacioException {
+        Scanner sc = new Scanner(System.in);
         Objeto encontrado = null;
-        for (int i = 0; i < inventario.length; i++) {
-            if (inventario[i] != null && inventario[i].getNombre().equalsIgnoreCase(nombre)) {
-                encontrado = inventario[i]; // Lo guardamos
-                break; // Salimos del bucle porque ya lo tenemos
+        System.out.println(j.mostrarObjetosLeibles());
+        System.out.println("¿Que objeto quieres leer");
+        String nombre = sc.nextLine();
+        encontrado = buscarObjetoEnElInventario(nombre);
+        if (encontrado != null) {
+            if (encontrado instanceof Leible nota) {
+                System.out.println(encontrado.getDescripcion());
+                System.out.println("En el papel pone: " + nota.leer());
             }
         }
-
         // 3. Si al final del for 'encontrado' sigue siendo null, es que no lo tenemos
         if (encontrado == null) {
-            throw new objetoNoEncontradoException("No tienes ningun objeto de ese tipo en tu inventario. \n" +
+            throw new ObjetoNoEncontradoException("No tienes ningun objeto de ese tipo en tu inventario. \n" +
                     "Encuentralo primero.");
         }
 
-        // 4. Si lo tenemos, mostramos su descripción
-        System.out.println(encontrado.getDescripcion());
-
-        // 5. ¿Es una nota? (Usamos la interfaz Leible)
-        if (encontrado instanceof Leible) {
-            // Hacemos un "cast" (le decimos a Java: trata este objeto como algo leíble)
-            Leible nota = (Leible) encontrado;
-            System.out.println("En el papel pone: " + nota.leer());
-        }
     }
 
     /**
@@ -119,41 +102,36 @@ public class Juego {
      * @return El objeto encontrado o null si no existe en ningún sitio.
      */
     private Objeto buscarObjeto(String nombre) {
-        // 1. Obtener la habitación donde está el jugador
         int posActual = j.getHabitacionActual();
         Habitacion sala = habitaciones[posActual];
 
-        // 2. Buscar en los objetos de la HABITACIÓN
         for (Objeto obj : sala.getObjetosHabitacion()) {
             if (obj != null && obj.getNombre().equalsIgnoreCase(nombre)) {
-                return obj; // Encontrado en el suelo
+                return obj;
             }
         }
 
-        // 3. Buscar en el INVENTARIO del jugador
         for (Objeto obj : j.getInventario()) {
             if (obj != null && obj.getNombre().equalsIgnoreCase(nombre)) {
-                return obj; // Encontrado en la mochila
+                return obj;
             }
         }
-
-        // 4. Si llegamos aquí, es que no está en ningún lado
         return null;
     }
 
-    public Objeto buscarObjetoHabitacion(String nombre) throws objetoNoEncontradoException {
+    public Objeto buscarObjetoHabitacion(String nombre) throws ObjetoNoEncontradoException {
         // 1. Obtener la habitación donde está el jugador
         int posActual = j.getHabitacionActual();
         Habitacion sala = habitaciones[habitacionActual];
 
-        // Buscar en los objetos de la HABITACIÓN
+
         Objeto[] obj = sala.getObjetosHabitacion();
         for (int i = 0; i < sala.getObjetosHabitacion().length; i++) {
             if (obj[i] != null && obj[i].getNombre().equalsIgnoreCase(nombre)) {
                 return obj[i]; // Encontrado en el suelo
             }
         }
-        throw new objetoNoEncontradoException("Ese objeto no esta en la habitacion");
+        throw new ObjetoNoEncontradoException("Ese objeto no esta en la habitacion");
     }
 
     public String mirar() {
@@ -175,9 +153,9 @@ public class Juego {
     /**
      * Metodo para ir a la derecha
      */
-    public void derecha() throws noHayMasHabitacionesException {
+    public void derecha() throws NoHayMasHabitacionesException {
         if (habitacionActual == habitaciones.length - 1) {
-            throw new noHayMasHabitacionesException("No hay mas habitaciones a la derecha. Solo puedes ir a la izquierda");
+            throw new NoHayMasHabitacionesException("No hay mas habitaciones a la derecha. Solo puedes ir a la izquierda");
         } else {
             System.out.println(habitaciones[habitacionActual + 1].getDescripcion());
             habitacionActual = habitacionActual + 1;
@@ -188,9 +166,9 @@ public class Juego {
     /**
      * Metodo para ir a la izquierda
      */
-    public void izquierda() throws noHayMasHabitacionesException {
+    public void izquierda() throws NoHayMasHabitacionesException {
         if (habitacionActual == 0) {
-            throw new noHayMasHabitacionesException("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
+            throw new NoHayMasHabitacionesException("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
         } else {
             System.out.println(habitaciones[habitacionActual - 1].getDescripcion());
             habitacionActual = habitacionActual - 1;
@@ -198,10 +176,38 @@ public class Juego {
     }
 
 
+    public Objeto buscarObjetoEnElInventario(String nombre) throws ObjetoNoEncontradoException {
+        Objeto[] obj = j.getInventario();
+        for (int i = 0; i < j.getInventario().length; i++) {
+            if (obj[i] != null && obj[i].getNombre().equalsIgnoreCase(nombre)) {
+                return obj[i]; // Encontrado en el suelo
+            }
+        }
+        throw new ObjetoNoEncontradoException("Ese objeto no esta en el inventario");
+    }
+
+    public void combinar() throws ObjetoNoEncontradoException, InventarioVacioException {
+        Objeto[] inventario = j.getInventario();
+        System.out.println("Estos son los objetos que puedes combinar:");
+        j.inventarioActual();
+        if (j.inventarioVacio()){
+            return;
+        }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("¿Que objeto quieres combinar?");
+        String objeto1 = sc.nextLine();
+        buscarObjetoEnElInventario(objeto1);
+        System.out.println("¿Con que objeto quieres combinar "+objeto1+"?");
+        String objeto2 = sc.nextLine();
+        buscarObjetoEnElInventario(objeto2);
+
+
+    }
+
     /*+
      * Metodo para coger objetos
      */
-    public void cogerObjetos() throws objetoNoEncontradoException, objetoNoCogibleException {
+    public void cogerObjetos() throws ObjetoNoEncontradoException, ObjetoNoCogibleException {
         Scanner sc = new Scanner(System.in);
         //llamar a listar objetos
         int numeroObjetos = listarObjetos();
@@ -220,12 +226,55 @@ public class Juego {
                 }
                 eliminarObjetoDeHabitacion(objeto); //Eliminamos el objeto del mapa
             } else {
-                throw new objetoNoCogibleException("El objeto: " + objeto.getNombre() + " no se puede guardar");
+                throw new ObjetoNoCogibleException("El objeto: " + objeto.getNombre() + " no se puede guardar");
             }
         } else {
             System.out.println("Ese objeto no esta en esta habitación");
         }
 
+    }
+
+    public void ejecutarAbrir() throws ObjetoNoEncontradoException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("¿Qué quieres abrir?");
+        String nombre = sc.nextLine();
+
+        // 1. Buscamos el objeto en la sala (ej: el Ropero)
+        Objeto obj = buscarObjetoHabitacion(nombre);
+
+        // 2. Comprobamos si se puede abrir (Interfaz Abrible)
+        if (obj instanceof Abrible) {
+            Abrible contenedor = (Abrible) obj;
+
+            // 3. Llavero automático: busca una llave en tu mochila
+            Llave llaveJugador = null;
+            Objeto[] inv = j.getInventario();
+            for (int i = 0; i < inv.length; i++) {
+                if (inv[i] != null && inv[i] instanceof Llave) {
+                    llaveJugador = (Llave) inv[i];
+                    break; // Cogemos la primera que encontremos
+                }
+            }
+
+            // 4. Pedimos al objeto que se abra y recibimos la RespuestaAccion
+            RespuestaAccion respuesta = contenedor.abrir(llaveJugador);
+            System.out.println(respuesta.mensaje());
+
+            // 5. Si tuvo éxito y es un contenedor, le robamos el contenido
+            if (respuesta.exito() && obj instanceof Contenedor) {
+                Contenedor c = (Contenedor) obj;
+                Objeto premio = c.getObjetoContenido();
+                if (premio != null) {
+                    if (guardarObjeto(premio)) {
+                        System.out.println("🎁 ¡Has encontrado " + premio.getNombre() + " y lo guardas!");
+                    } else {
+                        System.out.println("Ves un " + premio.getNombre() + " dentro, pero no tienes espacio.");
+                    }
+                }
+            }
+        } else {
+            System.out.println("No puedes abrir eso, no tiene cerradura.");
+        }
     }
 
     /**
@@ -298,7 +347,7 @@ public class Juego {
         while (jugando) {
 
             // TODO 3: Leer el comando del usuario por teclado
-            System.out.println("¿Qué quieres hacer ahora?: ");
+             System.out.println("¿Qué quieres hacer ahora?: ");
             String comando = sc.nextLine();
 
             /*
@@ -314,14 +363,14 @@ public class Juego {
                     try {
                         t.derecha();
                         break;
-                    } catch (noHayMasHabitacionesException e) {
+                    } catch (NoHayMasHabitacionesException e) {
                         System.out.println(e.getMessage());
                     }
                 case "ir izquierda":
                     try {
                         t.izquierda();
                         break;
-                    } catch (noHayMasHabitacionesException e) {
+                    } catch (NoHayMasHabitacionesException e) {
                         System.out.println(e.getMessage());
                     }
                 case "mirar":
@@ -338,21 +387,38 @@ public class Juego {
                 case "coger":
                     try {
                         t.cogerObjetos();
-                    } catch (objetoNoEncontradoException | objetoNoCogibleException e) {
+                    } catch (ObjetoNoEncontradoException | ObjetoNoCogibleException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
                 case "inventario":
-                    t.inventarioActual();
-                    break;
-                case "leer":
                     try {
-                        t.leer("Nota");
+                        t.getJ().inventarioActual();
                         break;
-                    } catch (objetoNoEncontradoException e) {
+                    }catch (InventarioVacioException e){
                         System.out.println(e.getMessage());
                     }
-
+                case "leer":
+                    try {
+                        t.leer();
+                        break;
+                    } catch (ObjetoNoEncontradoException | InventarioVacioException e) {
+                        System.out.println(e.getMessage());
+                    }
+                case "combinar":
+                    try {
+                        t.combinar();
+                        break;
+                    }catch (ObjetoNoEncontradoException | InventarioVacioException e){
+                        System.out.println(e.getMessage());
+                    }
+                case "abrir":
+                    try {
+                        t.ejecutarAbrir();
+                    } catch (ObjetoNoEncontradoException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
             }
 
         }
