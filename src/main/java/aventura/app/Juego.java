@@ -1,8 +1,8 @@
 package aventura.app;
 
-import Exceptions.noHayMasHabitacionesException;
-import Exceptions.objetoNoCogibleException;
-import Exceptions.objetoNoEncontradoException;
+import Exceptions.NoHayMasHabitacionesException;
+import Exceptions.ObjetoNoCogibleException;
+import Exceptions.ObjetoNoEncontradoException;
 import domain.*;
 
 import java.util.Arrays;
@@ -85,7 +85,7 @@ public class Juego {
         }
     }
 
-    public void leer(String nombre) throws objetoNoEncontradoException {
+    public void leer(String nombre) throws ObjetoNoEncontradoException {
         Objeto[] inventario = j.getInventario();
         Objeto encontrado = null;
         for (int i = 0; i < inventario.length; i++) {
@@ -97,7 +97,7 @@ public class Juego {
 
         // 3. Si al final del for 'encontrado' sigue siendo null, es que no lo tenemos
         if (encontrado == null) {
-            throw new objetoNoEncontradoException("No tienes ningun objeto de ese tipo en tu inventario. \n" +
+            throw new ObjetoNoEncontradoException("No tienes ningun objeto de ese tipo en tu inventario. \n" +
                     "Encuentralo primero.");
         }
 
@@ -141,7 +141,7 @@ public class Juego {
         return null;
     }
 
-    public Objeto buscarObjetoHabitacion(String nombre) throws objetoNoEncontradoException {
+    public Objeto buscarObjetoHabitacion(String nombre) throws ObjetoNoEncontradoException {
         // 1. Obtener la habitación donde está el jugador
         int posActual = j.getHabitacionActual();
         Habitacion sala = habitaciones[habitacionActual];
@@ -153,7 +153,7 @@ public class Juego {
                 return obj[i]; // Encontrado en el suelo
             }
         }
-        throw new objetoNoEncontradoException("Ese objeto no esta en la habitacion");
+        throw new ObjetoNoEncontradoException("Ese objeto no esta en la habitacion");
     }
 
     public String mirar() {
@@ -175,9 +175,9 @@ public class Juego {
     /**
      * Metodo para ir a la derecha
      */
-    public void derecha() throws noHayMasHabitacionesException {
+    public void derecha() throws NoHayMasHabitacionesException {
         if (habitacionActual == habitaciones.length - 1) {
-            throw new noHayMasHabitacionesException("No hay mas habitaciones a la derecha. Solo puedes ir a la izquierda");
+            throw new NoHayMasHabitacionesException("No hay mas habitaciones a la derecha. Solo puedes ir a la izquierda");
         } else {
             System.out.println(habitaciones[habitacionActual + 1].getDescripcion());
             habitacionActual = habitacionActual + 1;
@@ -188,9 +188,9 @@ public class Juego {
     /**
      * Metodo para ir a la izquierda
      */
-    public void izquierda() throws noHayMasHabitacionesException {
+    public void izquierda() throws NoHayMasHabitacionesException {
         if (habitacionActual == 0) {
-            throw new noHayMasHabitacionesException("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
+            throw new NoHayMasHabitacionesException("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
         } else {
             System.out.println(habitaciones[habitacionActual - 1].getDescripcion());
             habitacionActual = habitacionActual - 1;
@@ -201,7 +201,7 @@ public class Juego {
     /*+
      * Metodo para coger objetos
      */
-    public void cogerObjetos() throws objetoNoEncontradoException, objetoNoCogibleException {
+    public void cogerObjetos() throws ObjetoNoEncontradoException, ObjetoNoCogibleException {
         Scanner sc = new Scanner(System.in);
         //llamar a listar objetos
         int numeroObjetos = listarObjetos();
@@ -220,7 +220,7 @@ public class Juego {
                 }
                 eliminarObjetoDeHabitacion(objeto); //Eliminamos el objeto del mapa
             } else {
-                throw new objetoNoCogibleException("El objeto: " + objeto.getNombre() + " no se puede guardar");
+                throw new ObjetoNoCogibleException("El objeto: " + objeto.getNombre() + " no se puede guardar");
             }
         } else {
             System.out.println("Ese objeto no esta en esta habitación");
@@ -314,14 +314,14 @@ public class Juego {
                     try {
                         t.derecha();
                         break;
-                    } catch (noHayMasHabitacionesException e) {
+                    } catch (NoHayMasHabitacionesException e) {
                         System.out.println(e.getMessage());
                     }
                 case "ir izquierda":
                     try {
                         t.izquierda();
                         break;
-                    } catch (noHayMasHabitacionesException e) {
+                    } catch (NoHayMasHabitacionesException e) {
                         System.out.println(e.getMessage());
                     }
                 case "mirar":
@@ -338,7 +338,7 @@ public class Juego {
                 case "coger":
                     try {
                         t.cogerObjetos();
-                    } catch (objetoNoEncontradoException | objetoNoCogibleException e) {
+                    } catch (ObjetoNoEncontradoException | ObjetoNoCogibleException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -349,7 +349,7 @@ public class Juego {
                     try {
                         t.leer("Nota");
                         break;
-                    } catch (objetoNoEncontradoException e) {
+                    } catch (ObjetoNoEncontradoException e) {
                         System.out.println(e.getMessage());
                     }
 
