@@ -1,6 +1,7 @@
 package aventura.app;
 
 import Exceptions.noHayMasHabitacionesException;
+import Exceptions.objetoNoCogibleException;
 import Exceptions.objetoNoEncontradoException;
 import domain.*;
 
@@ -48,7 +49,9 @@ public class Juego {
                 "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n");
         habitaciones[1] = h1;
         Nota nota1 = new Nota("Nota", "Un papel arrugado", "Me siento alcapone con el x47 esrtos cabrones me odian pero ninguno se atrebe ");
+        Mueble escritorio = new Mueble("Un escritorio que parece antiguo lleno de polvo. Tiene una nota encima", "Escritorio", true);
         h1.addObjeto(nota1);
+        h1.addObjeto(escritorio);
         Habitacion h2 = new Habitacion("LABORATORIO DE INVESTIGACIÓN:la puerta está trabada a medias, dejando un espacio estrecho para entrar. Luces rojas pulsantes bañan la sala. Tubos de ensayo rotos y frascos marcados con símbolos biológicos cubren las mesas. En el fondo, una cámara de contención de vidrio está agrietada desde dentro.\n" +
                 "Un monitor reproduce una grabación detenida en una frase:\n" +
                 "\n" + "“¡Aún no está listo para la exposición humana!”");
@@ -198,7 +201,7 @@ public class Juego {
     /*+
      * Metodo para coger objetos
      */
-    public void cogerObjetos() throws objetoNoEncontradoException {
+    public void cogerObjetos() throws objetoNoEncontradoException, objetoNoCogibleException {
         Scanner sc = new Scanner(System.in);
         //llamar a listar objetos
         int numeroObjetos = listarObjetos();
@@ -211,10 +214,13 @@ public class Juego {
         String nombreObjeto = sc.nextLine();
         Objeto objeto = buscarObjetoHabitacion(nombreObjeto);
         if (objeto != null) {
-
-            if (guardarObjeto(objeto)) {
-                System.out.println("✅ Has cogido " + objeto);
+            if (objeto instanceof Inventariable) {
+                if (guardarObjeto(objeto)) {
+                    System.out.println("✅ Has cogido " + objeto);
+                }
                 eliminarObjetoDeHabitacion(objeto); //Eliminamos el objeto del mapa
+            } else {
+                throw new objetoNoCogibleException("El objeto: " + objeto.getNombre() + " no se puede guardar");
             }
         } else {
             System.out.println("Ese objeto no esta en esta habitación");
@@ -332,7 +338,7 @@ public class Juego {
                 case "coger":
                     try {
                         t.cogerObjetos();
-                    } catch (objetoNoEncontradoException e) {
+                    } catch (objetoNoEncontradoException | objetoNoCogibleException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
