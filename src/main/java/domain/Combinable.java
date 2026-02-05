@@ -3,5 +3,5 @@ package domain;
 import Exceptions.ObjetoNoCombinableException;
 
 public interface Combinable {
-    Objeto combinar(Item otro) throws ObjetoNoCombinableException;
+    Objeto combinar(Objeto otro) throws ObjetoNoCombinableException;
 }

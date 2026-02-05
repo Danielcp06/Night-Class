@@ -1,6 +1,6 @@
 package domain;
 
-public class Nota extends Item implements Leible {
+public class Nota extends Item implements Leible{
     private String contenido;
 
     public Nota(String nombre, String descripcion, String contenido) {

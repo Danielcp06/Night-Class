@@ -1,9 +1,6 @@
 package aventura.app;
 
-import Exceptions.InventarioVacioException;
-import Exceptions.NoHayMasHabitacionesException;
-import Exceptions.ObjetoNoCogibleException;
-import Exceptions.ObjetoNoEncontradoException;
+import Exceptions.*;
 import domain.*;
 
 import java.util.Arrays;
@@ -42,17 +39,20 @@ public class Juego {
                 "\n" + "“Protocolo interno de emergencia activado. No abandonar el edificio.”");
 
         habitaciones[0] = h0;
-        Llave l = new Llave("Una llave que parece oxidada", "Llave oxidada", true, null);
+        LlaveOxidada l = new LlaveOxidada("Una llave que parece oxidada", "Llave oxidada", true);
         h0.addObjeto(l);
         Habitacion h1 = new Habitacion("RECEPCIÓN:estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
                 "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
                 "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
                 "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n");
         habitaciones[1] = h1;
-        Nota nota1 = new Nota("Nota", "Un papel arrugado", "Me siento alcapone con el x47 esrtos cabrones me odian pero ninguno se atrebe ");
+        Nota nota1 = new Nota("Nota", "Un papel arrugado", "El doctor Bermudo esta experimentando con algo bastante raro necesito que alguien lo pare. \n Dr Joao ");
         Mueble escritorio = new Mueble("Un escritorio que parece antiguo lleno de polvo. Tiene una nota encima", "Escritorio", true);
+        Llave llaveDorada = new Llave("Una llave de oro con una calabera en el mango","Llave dorada", true,"123");
+        Contenedor cofre = new Contenedor("Cofre","Un cofre que parece reforzado con un candado", "11", llaveDorada);
         h1.addObjeto(nota1);
         h1.addObjeto(escritorio);
+        h1.addObjeto(cofre);
         Habitacion h2 = new Habitacion("LABORATORIO DE INVESTIGACIÓN:la puerta está trabada a medias, dejando un espacio estrecho para entrar. Luces rojas pulsantes bañan la sala. Tubos de ensayo rotos y frascos marcados con símbolos biológicos cubren las mesas. En el fondo, una cámara de contención de vidrio está agrietada desde dentro.\n" +
                 "Un monitor reproduce una grabación detenida en una frase:\n" +
                 "\n" + "“¡Aún no está listo para la exposición humana!”");
@@ -78,7 +78,7 @@ public class Juego {
         Scanner sc = new Scanner(System.in);
         Objeto encontrado = null;
         System.out.println(j.mostrarObjetosLeibles());
-        System.out.println("¿Que objeto quieres leer");
+        System.out.println("¿Que objeto quieres leer?");
         String nombre = sc.nextLine();
         encontrado = buscarObjetoEnElInventario(nombre);
         if (encontrado != null) {
@@ -186,23 +186,80 @@ public class Juego {
         throw new ObjetoNoEncontradoException("Ese objeto no esta en el inventario");
     }
 
+    public void examinar(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Introduce el nombre del objeto que quieras examinar:  \n");
+        String objeto = sc.nextLine();
+        Objeto aux = buscarObjeto(objeto);
+        if (aux == null){
+            System.out.println("Ese objeto no se encuentra en el inventario");
+        }
+        else {
+            System.out.println("Descripción:");
+            System.out.println(aux.getDescripcion());
+            if (aux instanceof Leible l) {
+                System.out.println("Contenido: \n");
+                System.out.println(l.leer());
+            }
+        }
+    }
+
     public void combinar() throws ObjetoNoEncontradoException, InventarioVacioException {
-        Objeto[] inventario = j.getInventario();
-        System.out.println("Estos son los objetos que puedes combinar:");
-        j.inventarioActual();
-        if (j.inventarioVacio()){
+        // 1. Mostrar inventario y verificar si está vacío
+        if (j.inventarioVacio()) {
+            System.out.println("El inventario está vacío.");
+            j.inventarioActual();
             return;
         }
+
+        j.inventarioActual();
         Scanner sc = new Scanner(System.in);
-        System.out.println("¿Que objeto quieres combinar?");
-        String objeto1 = sc.nextLine();
-        buscarObjetoEnElInventario(objeto1);
-        System.out.println("¿Con que objeto quieres combinar "+objeto1+"?");
-        String objeto2 = sc.nextLine();
-        buscarObjetoEnElInventario(objeto2);
 
+        // 2. Pedir nombres de los objetos (Strings)
+        System.out.println("¿Qué objeto quieres combinar?");
+        String nombre1 = sc.nextLine();
 
+        System.out.println("¿Con qué objeto quieres combinar " + nombre1 + "?");
+        String nombre2 = sc.nextLine();
+
+        // 3. Buscar los OBJETOS reales usando los nombres
+        // IMPORTANTE: buscarObjeto debe devolver el objeto, no ser void
+        Objeto obj1 = buscarObjetoEnElInventario(nombre1);
+        Objeto obj2 = buscarObjetoEnElInventario(nombre2);
+
+        // 4. Lógica de validación
+        if (obj1 != null && obj2 != null) {
+
+            if (!obj1.equals(obj2)) {
+
+                if (obj1 instanceof Combinable c1) {// Java 16+ Pattern Matching
+                    try {
+                        // Asegúrate de que el metodo combinar acepte el tipo de obj2
+                        Objeto resultante = c1.combinar(obj2);
+
+                        eliminarObjetoDelInventario(obj1);
+                        eliminarObjetoDelInventario(obj2);
+                        guardarObjeto(resultante);
+
+                        System.out.println("Los objetos se han combinado con éxito.");
+
+                    } catch (ObjetoNoCombinableException e) {
+                        System.err.println("Error: " + e.getMessage());
+                    }
+                } else {
+                    System.err.println("El objeto '" + nombre1 + "' no es combinable.");
+                }
+
+            } else {
+                System.err.println("No se puede combinar el objeto consigo mismo.");
+            }
+
+        } else {
+            System.err.println("Uno de los dos objetos no se ha encontrado en tu inventario.");
+        }
     }
+
+
 
     /*+
      * Metodo para coger objetos
@@ -234,12 +291,10 @@ public class Juego {
 
     }
 
-    public void ejecutarAbrir() throws ObjetoNoEncontradoException {
+    public void abrir() throws ObjetoNoEncontradoException {
         Scanner sc = new Scanner(System.in);
         System.out.println("¿Qué quieres abrir?");
         String nombre = sc.nextLine();
-
-        // 1. Buscamos el objeto en la sala (ej: el Ropero)
         Objeto obj = buscarObjetoHabitacion(nombre);
 
         // 2. Comprobamos si se puede abrir (Interfaz Abrible)
@@ -289,7 +344,19 @@ public class Juego {
             if (objetosEnSala[i] == objABorrar) {
                 // 3. Ponemos la posición a null para que "desaparezca"
                 objetosEnSala[i] = null;
-                return; // Ya lo hemos borrado, salimos del método
+                return;
+            }
+        }
+    }
+
+    private void eliminarObjetoDelInventario(Objeto objABorrar){
+        Objeto[] objetosEnInventario = j.getInventario();
+
+        for (int i = 0; i < objetosEnInventario.length; i++) {
+            if (objetosEnInventario[i] == objABorrar) {
+                // 3. Ponemos la posición a null para que "desaparezca"
+                objetosEnInventario[i] = null;
+                return;
             }
         }
     }
@@ -393,11 +460,12 @@ public class Juego {
                     break;
                 case "inventario":
                     try {
-                        t.getJ().inventarioActual();
+                        System.out.println(t.getJ().inventarioActual());
                         break;
                     }catch (InventarioVacioException e){
                         System.out.println(e.getMessage());
                     }
+                    break;
                 case "leer":
                     try {
                         t.leer();
@@ -405,6 +473,7 @@ public class Juego {
                     } catch (ObjetoNoEncontradoException | InventarioVacioException e) {
                         System.out.println(e.getMessage());
                     }
+                    break;
                 case "combinar":
                     try {
                         t.combinar();
@@ -412,12 +481,17 @@ public class Juego {
                     }catch (ObjetoNoEncontradoException | InventarioVacioException e){
                         System.out.println(e.getMessage());
                     }
+                    break;
                 case "abrir":
                     try {
-                        t.ejecutarAbrir();
+                        t.abrir();
+                        break;
                     } catch (ObjetoNoEncontradoException e) {
                         System.out.println(e.getMessage());
                     }
+                    break;
+                case "examinar":
+                    t.examinar();
                     break;
             }
 
