@@ -8,11 +8,10 @@ public class Lija extends Item implements Combinable{
     }
 
     @Override
-    public Objeto combinar(Item otro) throws ObjetoNoCombinableException {
+    public Objeto combinar(Objeto otro) throws ObjetoNoCombinableException {
         if (otro != null){
             if(otro instanceof LlaveOxidada llaveOxidada){
                 return llaveOxidada.combinar(this);
-
             }
         }
         throw new ObjetoNoCombinableException("Falta algun objeto para poder combinar");

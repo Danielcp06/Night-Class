@@ -8,7 +8,7 @@ public class LlaveOxidada extends Item implements Combinable{
     }
 
     @Override
-    public Objeto combinar(Item otro) throws ObjetoNoCombinableException {
+    public Objeto combinar(Objeto otro) throws ObjetoNoCombinableException {
         if (otro != null){
             if (otro instanceof Lija){
                 return new Llave("Una llave con un dorado reluciente", "Llave", true, "11");

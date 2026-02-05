@@ -42,6 +42,7 @@ public class Jugador{
 
     public String inventarioActual() throws InventarioVacioException {
         int contador = 0;
+        StringBuilder contenido = new StringBuilder();
         for (int i = 0; i < getInventario().length; i++) {
             if (getInventario()[i] != null) {
                 contador++;
@@ -53,11 +54,13 @@ public class Jugador{
         } else {
             for (int i = 0; i < getInventario().length; i++) {
                 if (getInventario()[i] != null) {
-                    return (i + 1 + ") " +getInventario()[i]);
+
+                    contenido.append(contador++).append(". ").append(inventario[i].getNombre()).append(System.lineSeparator());
+
                 }
             }
         }
-        return " ";
+        return contenido.toString();
     }
 
     public String  mostrarObjetosLeibles(){
