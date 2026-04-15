@@ -1,513 +1,506 @@
-package aventura.app;
+package main.java.aventura.app;
 
-import Exceptions.*;
-import domain.*;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import main.java.Exceptions.AventuraException;
+import main.java.Exceptions.InventarioLlenoException;
+import main.java.Exceptions.ObjetoNoCombinableException;
+import main.java.domain.*;
+import main.java.io.MiEntradaSalida;
+
+import java.util.Locale;
 
 /**
  * Clase principal del juego "Tu Propia Aventura".
- * Esqueleto para la Misión 1 (UD1-UD3).
- * VUESTRO TRABAJO es rellenar todos los TODO
+ * Esqueleto para la Misión 1 (UD4-UD5).
  */
 public class Juego {
 
-    // Atributos de la clase: el jugador, la ubicación actual, el mapa y la historia
-    private final Jugador j;
-    private int habitacionActual;//Habitación en la que empezaremos el juego
-    private Habitacion[] habitaciones;
+    // --- NÚCLEO: Definición de Datos (FASE 1) ---
+    // Esta parte os la damos HECHA. Es el "contrato" del núcleo.
+
     private String descripcionJuego;
 
+    // El mapa de habitaciones.
+    private Habitacion[] habitaciones;
 
-    // Constructor: Inicializa al jugador y reserva espacio para 3 habitaciones
-    public Juego(int habitacionActual) {
-        this.j = new Jugador();
-        this.habitacionActual = habitacionActual;
-        this.habitaciones = new Habitacion[3];
+    // El inventario ahora se ha movido a la clase Jugador
+
+    // Variable que guarda la posición actual del jugador
+    private Jugador jugador;
+
+    // --- FIN DE LA DEFINICIÓN DE DATOS ---
+
+    /**
+     * Constructor de la clase Juego.
+     *
+     * @param jugador El jugador que participa en el juego.
+     */
+    public Juego(Jugador jugador) {
+        // Inicialización del mapa de habitaciones
+        habitaciones = new Habitacion[3]; // Cambia el tamaño según el número de habitaciones que tengas
+        this.jugador = jugador;
+        inicializarJuego();
     }
 
-    // Configura el escenario inicial, crea las habitaciones y coloca los objetos
-    public void inicializar() {
+    /**
+     * Inicializa el juego creando las habitaciones y los objetos.
+     */
+    private void inicializarJuego() {
+
         descripcionJuego = "Seis meses después del primer día del apocalipsis, eres J.A Bermudo, un exdetective \n" +
-                "obsesionado con encontrar el \"Protocolo P.R.C\", la clave del brote, de la Dra. Sonia Joao. Tu pista te \n" +
+                "obsesionado con encontrar el Protocolo P.R.C, la clave del brote, de la Dra. Sonia Joao. Tu pista te \n" +
                 "lleva al sellado edificio de la Corporación Miravent, un laberinto silencioso lleno de peligros.\n" +
                 "En la recepción, tu objetivo es encontrar información en las distintas salas para avanzar. Te enfrentas \n" +
                 "a tu primera elección crucial: sala del servicio de mantenimiento (Izquierda) o las escaleras de servicio (Derecha) \n" +
                 "hacia niveles inferiores. Tu supervivencia depende de la información que encuentres en cada sala. \n";
-
-        // Configuración de la Habitación 0 (Sala de Descanso)
-        Habitacion h0 = new Habitacion("SALA DE DESCANSO:Una cafetera queda encendida, burbujeando un café quemado con olor rancio. Sillas volcadas y bandejas con comida a medio comer sugieren una interrupción brusca.\n" +
+        //Cremos el escenario
+        Habitacion descanso = new Habitacion("SALA DE DESCANSO:Una cafetera queda encendida, burbujeando un café quemado con olor rancio. Sillas volcadas y bandejas con comida a medio comer sugieren una interrupción brusca.\n" +
                 " Hay casilleros abiertos: dentro hay pertenencias personales, fotos de familia y tarjetas de acceso.\n" +
                 " En una mesa, un móvil vibra sin parar, mostrando una notificación repetida:\n" +
                 "\n" + "“Protocolo interno de emergencia activado. No abandonar el edificio.”");
+        descanso.addObjeto(new Mueble("Una estantería llena de libros y cuadernos.","Estanteria" , true));
+        descanso.addObjeto(new Item("Una llave pequeña de metal.","Llave" , true));
+        descanso.addObjeto(new Lija("Lija","Lija",true));
+        habitaciones[0] = descanso;
 
-        habitaciones[0] = h0;
-        LlaveOxidada l = new LlaveOxidada("Una llave que parece oxidada", "Llave oxidada", true);
-        h0.addObjeto(l);
-
-        // Configuración de la Habitación 1 (Recepción)
-        Habitacion h1 = new Habitacion("RECEPCIÓN:estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
+        Habitacion recepcion = new Habitacion("RECEPCIÓN:estas en la recepción inicial de la corporación miravent.Un gran mostrador de metal domina la entrada, cubierto de polvo y papeles amarillentos. \n" +
                 "El logotipo de la corporación —medio borrado— adorna la pared del fondo, con luces que parpadean débilmente.\n" +
                 "El suelo está lleno de huellas secas y trozos de cristales rotos; una silla caída sugiere que alguien salió con prisa. \n" +
-                "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n");
-        habitaciones[1] = h1;
-        Nota nota1 = new Nota("Nota", "Un papel arrugado", "El doctor Bermudo esta experimentando con algo bastante raro necesito que alguien lo pare. \n Dr Joao ");
-        Mueble escritorio = new Mueble("Un escritorio que parece antiguo lleno de polvo. Tiene una nota encima", "Escritorio", true);
-        Llave llaveDorada = new Llave("Una llave de oro con una calabera en el mango","Llave dorada", true,"123");
-        Contenedor cofre = new Contenedor("Cofre","Un cofre que parece reforzado con un candado", "11", llaveDorada);
-        h1.addObjeto(nota1);
-        h1.addObjeto(escritorio);
-        h1.addObjeto(cofre);
-        Habitacion h2 = new Habitacion("LABORATORIO DE INVESTIGACIÓN:la puerta está trabada a medias, dejando un espacio estrecho para entrar. Luces rojas pulsantes bañan la sala. Tubos de ensayo rotos y frascos marcados con símbolos biológicos cubren las mesas. En el fondo, una cámara de contención de vidrio está agrietada desde dentro.\n" +
+                "En una esquina, una planta marchita aún permanece en su maceta, junto a una pantalla que muestra el mensaje: “MANTÉNGASE TRANQUILO. LA SITUACIÓN ESTÁ BAJO CONTROL.\n"
+        );
+        recepcion.addObjeto(new Contenedor("Taquilla", "Una taquilla metálica cerrada.", "Llave123", new LlaveOxidada("Una llave llena de oxido","Llave oxidada",true)));
+        habitaciones[1] = recepcion;
+
+        Habitacion laboratorio = new Habitacion("LABORATORIO DE INVESTIGACIÓN:la puerta está trabada a medias, dejando un espacio estrecho para entrar. Luces rojas pulsantes bañan la sala. Tubos de ensayo rotos y frascos marcados con símbolos biológicos cubren las mesas. En el fondo, una cámara de contención de vidrio está agrietada desde dentro.\n" +
                 "Un monitor reproduce una grabación detenida en una frase:\n" +
                 "\n" + "“¡Aún no está listo para la exposición humana!”");
-        habitaciones[2] = h2;
-        Lija lija = new Lija("Una lija aspera que parece que sirve para quitar oxido","Lija", true);
-        Contenedor ropero = new Contenedor("Ropero","Un ropero de madera que parece cerrado",null,lija);
-        h2.addObjeto(ropero);
-    }
-
-    public String getDescripcionJuego() {
-        return descripcionJuego;
-    }
-
-    public Habitacion[] getHabitaciones() {
-        return habitaciones;
-    }
-
-    public Jugador getJ() {
-        return j;
-    }
-
-    public void leer() throws ObjetoNoEncontradoException, InventarioVacioException {
-        Scanner sc = new Scanner(System.in);
-        Objeto encontrado = null;
-        System.out.println(j.mostrarObjetosLeibles());
-        System.out.println("¿Que objeto quieres leer?");
-        String nombre = sc.nextLine();
-        encontrado = buscarObjetoEnElInventario(nombre);
-        if (encontrado != null) {
-            if (encontrado instanceof Leible nota) {
-                System.out.println(encontrado.getDescripcion());
-                System.out.println("En el papel pone: " + nota.leer());
-            }
-        }
-        // 3. Si al final del for 'encontrado' sigue siendo null, es que no lo tenemos
-        if (encontrado == null) {
-            throw new ObjetoNoEncontradoException("No tienes ningun objeto de ese tipo en tu inventario. \n" +
-                    "Encuentralo primero.");
-        }
-
-    }
-
-    /**
-     * Busca un objeto por su nombre en la habitación actual y en el inventario.
-     *
-     * @param nombre El nombre del objeto a buscar.
-     * @return El objeto encontrado o null si no existe en ningún sitio.
-     */
-    private Objeto buscarObjeto(String nombre) {
-        int posActual = j.getHabitacionActual();
-        Habitacion sala = habitaciones[posActual];
-
-        for (Objeto obj : sala.getObjetosHabitacion()) {
-            if (obj != null && obj.getNombre().equalsIgnoreCase(nombre)) {
-                return obj;
-            }
-        }
-
-        for (Objeto obj : j.getInventario()) {
-            if (obj != null && obj.getNombre().equalsIgnoreCase(nombre)) {
-                return obj;
-            }
-        }
-        return null;
-    }
-
-    public Objeto buscarObjetoHabitacion(String nombre) throws ObjetoNoEncontradoException {
-        // 1. Obtener la habitación donde está el jugador
-        int posActual = j.getHabitacionActual();
-        Habitacion sala = habitaciones[habitacionActual];
-
-
-        Objeto[] obj = sala.getObjetosHabitacion();
-        for (int i = 0; i < sala.getObjetosHabitacion().length; i++) {
-            if (obj[i] != null && obj[i].getNombre().equalsIgnoreCase(nombre)) {
-                return obj[i]; // Encontrado en el suelo
-            }
-        }
-        throw new ObjetoNoEncontradoException("Ese objeto no esta en la habitacion");
-    }
-
-    public String mirar() {
-        System.out.println(habitaciones[habitacionActual].getDescripcion());
-        Objeto[] objetosHabitacion = habitaciones[habitacionActual].getObjetosHabitacion();
-        int contadorObjetos = 0;
-        for (int i = 0; i < objetosHabitacion.length; i++) {
-            if (objetosHabitacion[i] != null) {
-                contadorObjetos++;
-                break;
-            }
-        }
-        if (contadorObjetos == 0) {
-            System.out.println("No hay objetos en la habitacion");
-        }
-        return Arrays.toString(objetosHabitacion);
-    }
-
-    /**
-     * Metodo para ir a la derecha
-     */
-    public void derecha() throws NoHayMasHabitacionesException {
-        if (habitacionActual == habitaciones.length - 1) {
-            throw new NoHayMasHabitacionesException("No hay mas habitaciones a la derecha. Solo puedes ir a la izquierda");
-        } else {
-            System.out.println(habitaciones[habitacionActual + 1].getDescripcion());
-            habitacionActual = habitacionActual + 1;
-        }
-
-    }
-
-    /**
-     * Metodo para ir a la izquierda
-     */
-    public void izquierda() throws NoHayMasHabitacionesException {
-        if (habitacionActual == 0) {
-            throw new NoHayMasHabitacionesException("No hay mas habitaciones a la izquierda. Solo puedes ir a la derecha");
-        } else {
-            System.out.println(habitaciones[habitacionActual - 1].getDescripcion());
-            habitacionActual = habitacionActual - 1;
-        }
-    }
-
-
-    public Objeto buscarObjetoEnElInventario(String nombre) throws ObjetoNoEncontradoException {
-        Objeto[] obj = j.getInventario();
-        for (int i = 0; i < j.getInventario().length; i++) {
-            if (obj[i] != null && obj[i].getNombre().equalsIgnoreCase(nombre)) {
-                return obj[i]; // Encontrado en el suelo
-            }
-        }
-        throw new ObjetoNoEncontradoException("Ese objeto no esta en el inventario");
-    }
-
-    public void examinar(){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Introduce el nombre del objeto que quieras examinar:  \n");
-        String objeto = sc.nextLine();
-        Objeto aux = buscarObjeto(objeto);
-        if (aux == null){
-            System.out.println("Ese objeto no se encuentra en el inventario");
-        }
-        else {
-            System.out.println("Descripción:");
-            System.out.println(aux.getDescripcion());
-            if (aux instanceof Leible l) {
-                System.out.println("Contenido: \n");
-                System.out.println(l.leer());
-            }
-        }
-    }
-
-    public void combinar() throws ObjetoNoEncontradoException, InventarioVacioException {
-        // 1. Mostrar inventario y verificar si está vacío
-        if (j.inventarioVacio()) {
-            System.out.println("El inventario está vacío.");
-            j.inventarioActual();
-            return;
-        }
-        Scanner sc = new Scanner(System.in);
-
-        // 2. Pedir nombres de los objetos (Strings)
-        System.out.println("¿Qué objeto quieres combinar?");
-        String nombre1 = sc.nextLine();
-
-        System.out.println("¿Con qué objeto quieres combinar " + nombre1 + "?");
-        String nombre2 = sc.nextLine();
-
-        // 3. Buscar los OBJETOS reales usando los nombres
-        // IMPORTANTE: buscarObjeto debe devolver el objeto, no ser void
-        Objeto obj1 = buscarObjetoEnElInventario(nombre1);
-        Objeto obj2 = buscarObjetoEnElInventario(nombre2);
-
-        // 4. Lógica de validación
-        if (obj1 != null && obj2 != null) {
-
-            if (!obj1.equals(obj2)) {
-
-                if (obj1 instanceof Combinable c1) {// Java 16+ Pattern Matching
-                    try {
-                        // Asegúrate de que el metodo combinar acepte el tipo de obj2
-                        Objeto resultante = c1.combinar(obj2);
-
-                        eliminarObjetoDelInventario(obj1);
-                        eliminarObjetoDelInventario(obj2);
-                        guardarObjeto(resultante);
-
-                        System.out.println("Los objetos se han combinado con éxito.");
-
-                    } catch (ObjetoNoCombinableException e) {
-                        System.err.println("Error: " + e.getMessage());
-                    }
-                } else {
-                    System.err.println("El objeto '" + nombre1 + "' no es combinable.");
-                }
-
-            } else {
-                System.err.println("No se puede combinar el objeto consigo mismo.");
-            }
-
-        } else {
-            System.err.println("Uno de los dos objetos no se ha encontrado en tu inventario.");
-        }
-    }
-
-    /*+
-     * Metodo para coger objetos
-     */
-    public void cogerObjetos() throws ObjetoNoEncontradoException, ObjetoNoCogibleException {
-        Scanner sc = new Scanner(System.in);
-        //llamar a listar objetos
-        int numeroObjetos = listarObjetos();
-        if (numeroObjetos == 0) { //Si no hay objetos en la sala decirlo y sacarlo de aqui
-            System.out.println("No hay objetos aquí");
-            return;
-        }
-        //almacenar el objeto que el jugador quiere coger
-        System.out.println("¿Que objeto quieres coger?");
-        String nombreObjeto = sc.nextLine();
-        Objeto objeto = buscarObjetoHabitacion(nombreObjeto);
-        if (objeto != null) {
-            if (objeto instanceof Inventariable) {
-                if (guardarObjeto(objeto)) {
-                    System.out.println("✅ Has cogido " + objeto);
-                }
-                eliminarObjetoDeHabitacion(objeto); //Eliminamos el objeto del mapa
-            } else {
-                throw new ObjetoNoCogibleException("El objeto: " + objeto.getNombre() + " no se puede guardar");
-            }
-        } else {
-            System.out.println("Ese objeto no esta en esta habitación");
-        }
-
-    }
-
-    public void abrir() throws ObjetoNoEncontradoException {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("¿Qué quieres abrir?");
-        String nombre = sc.nextLine();
-        Objeto obj = buscarObjetoHabitacion(nombre);
-
-        // 2. Comprobamos si se puede abrir (Interfaz Abrible)
-        if (obj instanceof Abrible) {
-            Abrible contenedor = (Abrible) obj;
-
-            // 3. Llavero automático: busca una llave en tu mochila
-            Llave llaveJugador = null;
-            Objeto[] inv = j.getInventario();
-            for (int i = 0; i < inv.length; i++) {
-                if (inv[i] != null && inv[i] instanceof Llave) {
-                    llaveJugador = (Llave) inv[i];
-                    break; // Cogemos la primera que encontremos
-                }
-            }
-
-            // 4. Pedimos al objeto que se abra y recibimos la RespuestaAccion
-            RespuestaAccion respuesta = contenedor.abrir(llaveJugador);
-            System.out.println(respuesta.mensaje());
-
-            // 5. Si tuvo éxito y es un contenedor, le robamos el contenido
-            if (respuesta.exito() && obj instanceof Contenedor) {
-                Contenedor c = (Contenedor) obj;
-                Objeto premio = c.getObjetoContenido();
-                if (premio != null) {
-                    if (guardarObjeto(premio)) {
-                        System.out.println("🎁 ¡Has encontrado " + premio.getNombre() + " y lo guardas!");
-                    } else {
-                        System.out.println("Ves un " + premio.getNombre() + " dentro, pero no tienes espacio.");
-                    }
-                }
-            }
-        } else {
-            System.out.println("No puedes abrir eso, no tiene cerradura.");
-        }
-    }
-
-    /**
-     * Elimina un objeto específico del array de la habitación donde está el jugador.
-     */
-    private void eliminarObjetoDeHabitacion(Objeto objABorrar) {
-        // 1. Obtenemos el array de objetos de la sala actual
-        Objeto[] objetosEnSala = habitaciones[j.getHabitacionActual()].getObjetosHabitacion();
-
-        // 2. Buscamos el objeto exacto por referencia
-        for (int i = 0; i < objetosEnSala.length; i++) {
-            if (objetosEnSala[i] == objABorrar) {
-                // 3. Ponemos la posición a null para que "desaparezca"
-                objetosEnSala[i] = null;
-                return;
-            }
-        }
-    }
-
-    private void eliminarObjetoDelInventario(Objeto objABorrar){
-        Objeto[] objetosEnInventario = j.getInventario();
-
-        for (int i = 0; i < objetosEnInventario.length; i++) {
-            if (objetosEnInventario[i] == objABorrar) {
-                // 3. Ponemos la posición a null para que "desaparezca"
-                objetosEnInventario[i] = null;
-                return;
-            }
-        }
-    }
-
-    private int listarObjetos() {
-        int contador = 0;
-        for (int i = 0; i < habitaciones[habitacionActual].getObjetosHabitacion().length; i++) {
-            if (habitaciones[habitacionActual].getObjetosHabitacion()[i] != null) {
-                System.out.println(habitaciones[habitacionActual].getObjetosHabitacion()[i]);
-                contador++;
-            }
-        }
-
-        return contador;
-    }
-
-    private boolean guardarObjeto(Objeto objeto) {
-        int ocupado = 0;
-        for (int i = 0; i < j.getInventario().length; i++) {
-            if (j.getInventario()[i] != null) ocupado++;
-        }
-        if (ocupado == j.getInventario().length) {
-            System.out.println("❌ No tienes espacio en el inventario");
-            return false;
-        }
-
-        for (int i = 0; i < j.getInventario().length; i++) {
-            if (j.getInventario()[i] == null) {
-                j.getInventario()[i] = objeto;
-                return true;
-            }
-        }
-
-        return false;
+        laboratorio.addObjeto(new Nota("Nota", "Una nota escrita a mano","La llave está bajo la estantería."));
+        laboratorio.addObjeto(new Mueble("Un escritorio con varios papeles encima.","Escritorio" , true));
+        Llave llavePequeña = new Llave("Una pequeña llave de metal.", "Llave pequeña", true, "Llave123");
+        laboratorio.addObjeto(new Contenedor("Cajon", "Un cajón de madera que parece roto", null ,llavePequeña));
+        laboratorio.addObjeto(new Contenedor("Cofre", "Un cofre de aspecto antiguo con un candado.","11", new Llave("Una llave dorada con una calabera de rubi en el mango","Super llave",true,"Superllave")));
+        habitaciones[2] = laboratorio;
     }
 
     public static void main(String[] args) {
-        // Puedes utilizar la clase MiEntradaSalida, que viviría en el paquete io
-        Scanner sc = new Scanner(System.in);
+        Juego juego = new Juego(new Jugador("Jugador1"));
+        juego.iniciar();
+
+        System.out.println("¡Gracias por jugar!");
+
+    }
+
+    public void iniciar() {
+        // Aquí puedes implementar la lógica para iniciar el juego si es necesario
         boolean jugando = true;
-        System.out.println("'LA CURA'");
+
+        System.out.println("¡Bienvenido a 'NIGHT CLASS'!");
+        System.out.println("------------------------------------------");
+        mostrarAyuda();
         System.out.println("------------------------------------------");
 
-        Juego t = new Juego(1);
-        t.inicializar();
+        //Muestra la descripción general del juego
+        System.out.println(descripcionJuego);
 
-        System.out.println(t.descripcionJuego);
+        //Muestra la descripción de la primera habitación
+        System.out.println(getHabitacionActual().mirar());
 
-        System.out.println(t.habitaciones[t.habitacionActual].getDescripcion());
-
-        System.out.println("Las opciones son ayuda, mirar, inventario, \n" +
-                "ir derecha, ir izquierda, coger [objeto] y salir");
-
-        // TODO 2: Iniciar el bucle principal del juego (game loop)
         while (jugando) {
 
-            // TODO 3: Leer el comando del usuario por teclado
-             System.out.println("¿Qué quieres hacer ahora?: ");
-            String comando = sc.nextLine();
+            //Leer el comando del usuario por teclado
+            System.out.print("\n> ");
+            String comando = MiEntradaSalida.solicitarCadena("¿Qué quieres hacer? ").toLowerCase(Locale.ROOT);
 
-            /*
-            TODO 4: Crear un 'switch' o una estructura 'if-else if'
-             para procesar el 'comando' del usuario.
-             Debe gestionar como mínimo: "ayuda", "mirar", "inventario",
-             "ir derecha", "ir izquierda", "coger [objeto]" y "salir".
-             */
 
-            switch (comando.toLowerCase()) {
-
-                case "ir derecha":
-                    try {
-                        t.derecha();
-                        break;
-                    } catch (NoHayMasHabitacionesException e) {
-                        System.out.println(e.getMessage());
-                    }
-                case "ir izquierda":
-                    try {
-                        t.izquierda();
-                        break;
-                    } catch (NoHayMasHabitacionesException e) {
-                        System.out.println(e.getMessage());
-                    }
-                case "mirar":
-                    t.mirar();
-                    t.listarObjetos();
-                    break;
-                case "salir":
+            switch (comando) {
+                case "mirar" -> mostrarInfoHabitacion();
+                case "inventario" -> mostrarObjetosInventario();
+                case "ir izquierda" -> cmdIrIzquierda();
+                case "ir derecha" -> cmdIrDerecha();
+                case "coger" -> cmdCoger();
+                case "examinar" -> cmdExaminar();
+                case "abrir" -> cmdAbrir();
+                case "combinar" -> cmdCombinar();
+                case "salir" -> {
                     jugando = false;
-                    break;
-                case "ayuda":
-                    System.out.println("Las opciones son ayuda, mirar, inventario,\n" +
-                            "ir derecha, ir izquierda, coger [objeto] y salir \n");
-                    break;
-                case "coger":
-                    try {
-                        t.cogerObjetos();
-                    } catch (ObjetoNoEncontradoException | ObjetoNoCogibleException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case "inventario":
-                    try {
-                        System.out.println(t.getJ().inventarioActual());
-                        break;
-                    }catch (InventarioVacioException e){
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case "leer":
-                    try {
-                        t.leer();
-                        break;
-                    } catch (ObjetoNoEncontradoException | InventarioVacioException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case "combinar":
-                    try {
-                        t.combinar();
-                        break;
-                    }catch (ObjetoNoEncontradoException | InventarioVacioException e){
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case "abrir":
-                    try {
-                        t.abrir();
-                        break;
-                    } catch (ObjetoNoEncontradoException e) {
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                case "examinar":
-                    t.examinar();
-                    break;
+                    System.out.println("Saliendo del juego...");
+                }
+
+                default -> mostrarAyuda();
             }
 
         }
-
-        System.out.println("¡Gracias por jugar!");
-        sc.close();
     }
 
-    /*
-    (Opcional - Buenas Prácticas)
-    Si el 'switch' se vuelve muy grande, podéis crear métodos privados
-    para organizar el código, por ejemplo:
-    private static void procesarComandoCoger(String comando) { ... }
-    private static void mostrarInfoHabitacion() { ... }
-    */
+    /**
+     * Mueve al jugador a la habitación de la izquierda si es posible.
+     */
+    private void cmdIrIzquierda() {
+        if (jugador.getHabitacionActual() > 0) {
+            jugador.setHabitacionActual(jugador.getHabitacionActual() - 1);
+            System.out.println("Te has movido a la habitación de la izquierda.");
+            mostrarInfoHabitacion();
+        } else {
+            System.out.println("No puedes ir más a la izquierda.");
+        }
+    }
+
+    /**
+     * Mueve al jugador a la habitación de la derecha si es posible.
+     */
+    private void cmdIrDerecha() {
+        if (jugador.getHabitacionActual() < habitaciones.length - 1) {
+            jugador.setHabitacionActual(jugador.getHabitacionActual() + 1);
+            System.out.println("Te has movido a la habitación de la derecha.");
+            mostrarInfoHabitacion();
+        } else {
+            System.out.println("No puedes ir más a la derecha.");
+        }
+    }
+
+    /**
+     * Procesa el comando de coger un objeto de la habitación actual.
+     */
+    private void cmdCoger() {
+        if (!hayObjetosEnHabitacion()) {
+            System.out.println("No hay objetos para coger en esta habitación.");
+            return;
+        }
+
+        mostrarObjetosHabitacion();
+        System.out.print("¿Qué objeto quieres coger? ");
+        String objetoACoger = MiEntradaSalida.solicitarCadena("").trim();
+
+        Objeto objeto = buscarObjeto(objetoACoger);
+        if (objeto == null) {
+            System.out.println("No se encontró ningún objeto llamado " + objetoACoger + ".");
+        }
+        else {
+            procesarComandoCoger(objeto);
+        }
+    }
+
+    /**
+     * Procesa el comando de examinar un objeto.
+     */
+    private void cmdExaminar() {
+        System.out.println("¿Qué objeto quieres examinar?");
+        mostrarTodosLosObjetos();
+        String objetoAExaminar = MiEntradaSalida.solicitarCadena("").trim();
+
+        Objeto objeto = buscarObjeto(objetoAExaminar);
+        if (objeto == null) {
+            System.out.println("No se encontró ningún objeto llamado " + objetoAExaminar + ".");
+        } else {
+            System.out.println(objeto.getDescripcion());
+            if (objeto instanceof Leible leible) {
+                System.out.println("Lees: \n" + leible.leer());
+            }
+        }
+    }
+
+    /**
+     * Procesa el comando de abrir un contenedor.
+     */
+    private void cmdAbrir() {
+        System.out.println("¿Qué contenedor quieres abrir?");
+        //TODO: Hacer que el método siguiente en lugar de mostrar devuelva una lista
+        mostrarObjetosAbribles();
+        String contenedorAAbrir = MiEntradaSalida.solicitarCadena("").trim();
+
+        Objeto objeto = buscarObjeto(contenedorAAbrir);
+
+        if (objeto == null) {
+            System.out.println("No se encontró ningún contenedor llamado " + contenedorAAbrir + ".");
+        } else {
+            procesarComandoAbrir(objeto);
+        }
+    }
+
+    /**
+     * Procesa el comando de combinar objetos.
+     */
+    private void cmdCombinar() {
+        System.out.println("¿Qué objetos quieres combinar?");
+        mostrarTodosLosObjetos();
+
+        String objeto1Nombre = MiEntradaSalida.solicitarCadena("Primer objeto: ").trim();
+        Objeto objeto1 = buscarObjeto(objeto1Nombre);
+
+        if (objeto1 == null){
+            System.out.printf("No se encontró %s%n", objeto1Nombre);
+            return;
+        }
+
+        String objeto2Nombre = MiEntradaSalida.solicitarCadena("Segundo objeto: ").trim();
+        Objeto objeto2 = buscarObjeto(objeto2Nombre);
+
+        if (objeto2 == null) {
+            System.out.printf("No se encontró %s%n", objeto2Nombre);
+            return;
+        }
+
+        if (objeto1 instanceof Combinable combinable1) {
+            try {
+                Objeto resultado = combinable1.combinar(objeto2);
+                if (resultado != null) {
+                    System.out.printf("Has combinado %s y %s para crear %s.%n",
+                            objeto1.getNombre(), objeto2.getNombre(), resultado.getNombre());
+
+                    // 1. Eliminar los objetos originales del inventario o de la habitación
+                    consumirObjeto(objeto1);
+                    consumirObjeto(objeto2);
+
+                    // 2. Añadir el nuevo objeto al inventario
+                    try {
+                        jugador.coger(resultado);
+                        System.out.println("El nuevo objeto está en tu inventario.");
+                    } catch (InventarioLlenoException e) {
+                        // El inventario está lleno, dejamos el objeto en la habitación
+                        System.out.println("¡Cuidado! Tu inventario estaba lleno y el objeto cayó al suelo.");
+                        getHabitacionActual().addObjeto(resultado);
+                        System.out.println("El nuevo objeto está en la habitación actual.");
+                    }
+                } else {
+                    System.out.println("La combinación no produjo ningún objeto.");
+                }
+
+            } catch (AventuraException | ObjetoNoCombinableException e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            System.out.println(objeto1.getNombre() + " no se puede combinar con otros objetos.");
+        }
+    }
+
+    /**
+     * Muestra la ayuda con los comandos disponibles.
+     */
+    private void mostrarAyuda() {
+        System.out.println("Estos son los comandos que puedes ejecutar:");
+        System.out.println("Ir derecha: intenta ir hacia la derecha");
+        System.out.println("Ir izquierda: intenta ir hacia la izquierda");
+        System.out.println("Mirar: muestra la descripción de la habitación actual y los objetos que hay en ella");
+        System.out.println("Examinar: muestra la descripción de un objeto específico");
+        System.out.println("Inventario: muestra los objetos que llevas contigo");
+        System.out.println("Coger: intenta coger un objeto de la habitación actual");
+        System.out.println("Abrir: intenta abrir un contenedor (cajón, cofre, taquilla, etc.)");
+        System.out.println("Combinar: intenta combinar dos objetos para crear uno nuevo");
+        System.out.println("Salir: termina el juego");
+        System.out.println("Escribe sólo el comando, sin parámetros adicionales.");
+    }
+
+    /**
+     * Muestra la información de la habitación actual.
+     */
+    private void mostrarInfoHabitacion() {
+        System.out.println(getHabitacionActual().mirar());
+
+    }
+
+    /**
+     * Procesa el comando de coger un objeto de la habitación actual.
+     * @param objetoACoger El objeto que el jugador desea coger.
+     */
+    private void procesarComandoCoger(Objeto objetoACoger) {
+        assert objetoACoger != null : "El objeto a coger no puede ser null";
+
+        boolean objetoEncontrado = false;
+        for (int i = 0; i < getHabitacionActual().getObjetosHabitacion().length && !objetoEncontrado; i++) {
+            if (objetoACoger.equals(getHabitacionActual().getObjetosHabitacion()[i])) {
+                try {
+                    objetoEncontrado = true;
+                    jugador.coger(objetoACoger);
+                    getHabitacionActual().getObjetosHabitacion()[i] = null; // Eliminar el objeto de la habitación
+                    System.out.println("Has cogido " + objetoACoger.getNombre() + " y lo has añadido a tu inventario.");
+                } catch (AventuraException | InventarioLlenoException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        if (!objetoEncontrado) {
+            System.out.println("No hay ningún objeto llamado " + objetoACoger.getNombre() + " en esta habitación.");
+        }
+    }
+
+    /**
+     * Procesa el comando de abrir un contenedor.
+     * @param objeto El objeto que el jugador desea abrir.
+     */
+    private void procesarComandoAbrir(Objeto objeto) {
+        if (!(objeto instanceof Abrible abrible)) {
+            System.out.printf("%s no se puede abrir.%n", objeto.getNombre());
+        } else {
+            if (abrible.estaAbierto()) {
+                System.out.println("Eso ya está abierto, no pierdas el tiempo.");
+                return;
+            }
+
+            Llave llaveParaUsar = null;
+
+            // Buscar una llave en el inventario que pueda abrir el contenedor
+            for (Objeto objInventario : jugador.getInventario()) {
+                if (objInventario instanceof Llave llave) {
+                    if (abrible.getCodigoNecesario() != null && llave.getCodigoDeSeguridad().equals(abrible.getCodigoNecesario())) {
+                        llaveParaUsar = llave;
+                        break;
+                    }
+                }
+            }
+
+            RespuestaAccion respuesta = abrible.abrir(llaveParaUsar);
+            System.out.println(respuesta.mensaje());
+
+            if (respuesta.exito()) {
+                if (abrible.getContenido() == null) {
+                    System.out.println("El contenedor está vacío.");
+                }
+                else {
+                    System.out.println("Has encontrado: " + abrible.getContenido().getNombre());
+                    try {
+                        //TODO: Si hubiera más de un objeto dentro, habría que implementar un bucle aquí o hacer que el contenido sea una lista de objetos.
+                        jugador.coger(abrible.getContenido());
+                        System.out.println("Has cogido " + abrible.getContenido().getNombre() + " y lo has añadido a tu inventario.");
+                        abrible.setContenido(null); // Vaciar el contenido del contenedor
+                    } catch (InventarioLlenoException e) {
+                        System.out.println(e.getMessage());
+                                    /*
+                                    No ha podido coger el objeto. Para que no haya problemas de pérdida de objetos, lo
+                                    que haremos será cerrar el contenedor de nuevo y dejar el objeto dentro.
+                                     */
+                        abrible.cerrar();
+                    } catch (AventuraException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Muestra los objetos presentes en la habitación actual.
+     */
+    private void mostrarObjetosHabitacion() {
+        System.out.print("Objetos en la habitación: ");
+        boolean hayObjetos = false;
+        boolean hayMasDeUnObjeto = false;
+        for (Objeto objeto : getHabitacionActual().getObjetosHabitacion()) {
+            if (objeto != null && objeto.isVisible()) {
+                hayObjetos = true;
+                System.out.print(hayMasDeUnObjeto ? ", " + objeto : objeto);
+                hayMasDeUnObjeto = true;
+            }
+        }
+        if (!hayObjetos) {
+            System.out.print("No hay objetos.");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Verifica si hay objetos en la habitación actual.
+     *
+     * @return true si hay al menos un objeto, false si no hay ninguno.
+     */
+    private boolean hayObjetosEnHabitacion() {
+        for (Objeto objeto : getHabitacionActual().getObjetosHabitacion()) {
+            if (objeto != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Muestra los objetos presentes en el inventario del jugador.
+     */
+    private void mostrarObjetosInventario() {
+        System.out.print("Objetos en el inventario: ");
+        boolean hayObjetos = false;
+        boolean hayMasDeUnObjeto = false;
+        for (Objeto objeto : jugador.getInventario()) {
+            if (objeto != null) {
+                hayObjetos = true;
+                System.out.print(hayMasDeUnObjeto ? ", " + objeto : objeto);
+                hayMasDeUnObjeto = true;
+            }
+        }
+        if (!hayObjetos) {
+            System.out.print("No hay objetos.");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Muestra todos los objetos disponibles, tanto en la habitación actual como en el inventario del jugador.
+     */
+    private void mostrarTodosLosObjetos() {
+        mostrarObjetosHabitacion();
+        mostrarObjetosInventario();
+    }
+
+    /**
+     * Muestra los objetos abribles disponibles, tanto en la habitación actual como en el inventario del jugador.
+     */
+    private void mostrarObjetosAbribles() {
+        System.out.print("Contenedores disponibles: ");
+        boolean hayObjetos = false;
+        boolean hayMasDeUnObjeto = false;
+        for (Objeto objeto : getHabitacionActual().getObjetosHabitacion()) {
+            if (objeto instanceof Abrible) {
+                hayObjetos = true;
+                System.out.print(hayMasDeUnObjeto ? ", " + objeto : objeto);
+                hayMasDeUnObjeto = true;
+            }
+        }
+        for (Objeto objeto : jugador.getInventario()) {
+            if (objeto instanceof Abrible) {
+                hayObjetos = true;
+                System.out.print(hayMasDeUnObjeto ? ", " + objeto : objeto);
+                hayMasDeUnObjeto = true;
+            }
+        }
+        if (!hayObjetos) {
+            System.out.print("No hay nada para abrir ahora mismo.");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Busca un objeto por su nombre, primero en la habitación actual y luego en el inventario del jugador.
+     *
+     * @param nombre El nombre del objeto a buscar.
+     * @return El objeto si se encuentra, o null si no se encuentra en ninguno de los dos lugares.
+     */
+    private Objeto buscarObjeto(String nombre) {
+        // 1. Buscamos en la habitación (Prioridad 1: Lo que veo)
+        Objeto encontrado = getHabitacionActual().buscar(nombre);
+
+        if (encontrado != null) {
+            return encontrado;
+        }
+
+        // 2. Si no está en la sala, buscamos en el bolsillo (Prioridad 2: Lo que tengo)
+        return jugador.buscarEnInventario(nombre);
+    }
+
+    /**
+     * Obtiene la habitación actual del jugador.
+     * @return La habitación en la que se encuentra el jugador.
+     */
+    private Habitacion getHabitacionActual() {
+        return habitaciones[jugador.getHabitacionActual()];
+    }
+
+    /**
+     * Elimina un objeto del juego, ya sea que esté en la habitación o en el inventario.
+     * Usado tras combinar objetos.
+     */
+    private void consumirObjeto(Objeto obj) {
+        // Intentamos borrar del inventario
+        jugador.eliminarDeInventario(obj);
+        // Intentamos borrar de la habitación
+        getHabitacionActual().eliminarObjeto(obj);
+    }
+
 }

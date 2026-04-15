@@ -1,4 +1,4 @@
-package aventura.io;
+package main.java.io;
 
 import java.util.Scanner;
 

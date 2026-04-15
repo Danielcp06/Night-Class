@@ -1,78 +1,103 @@
-package domain;
+package main.java.domain;
 
-import Exceptions.InventarioVacioException;
 
-public class Jugador{
-    public final static int TAM_INV = 10;
-    private Objeto[] inventario;
+import main.java.Exceptions.AventuraException;
+import main.java.Exceptions.InventarioLlenoException;
+
+public class Jugador {
+    private static final int MAX_INVENTARIO = 10;
+
+    private String nombre;
+    private Objeto[] inventario = new Objeto[MAX_INVENTARIO];
     private int habitacionActual;
 
-    public Jugador() {
-        this.inventario = new Objeto[TAM_INV];
-        setHabitacionActual(habitacionActual);
+    /**
+     * Constructor de la clase Jugador.
+     *
+     * @param nombre Nombre del jugador.
+     */
+    public Jugador(String nombre) {
+        this.nombre = nombre;
+        this.habitacionActual = 0;
     }
 
-    public Objeto[] getInventario() {
-        return inventario;
-    }
-    public void setInventario(Objeto[] inventario) {
-        this.inventario = inventario;
+    /** Getters y Setters */
+    public String getNombre() {
+        return nombre;
     }
 
     public int getHabitacionActual() {
         return habitacionActual;
     }
 
-    public void setHabitacionActual(int habitacionSiguiente) {
-        if (habitacionSiguiente >= 0 && habitacionSiguiente <= 8){
-            this.habitacionActual =  habitacionSiguiente;
-        }
+    public void setHabitacionActual(int habitacionActual) {
+        this.habitacionActual = habitacionActual;
     }
 
-    public boolean inventarioVacio() {
-        int contador = 0;
-        for (int i = 0; i < getInventario().length; i++) {
-            if (getInventario()[i] != null) {
-                contador++;
-            }
-        }
-
-        return contador == 0;
+    public Objeto[] getInventario() {
+        return inventario;
     }
 
-    public String inventarioActual() throws InventarioVacioException {
-        int contador = 0;
-        StringBuilder contenido = new StringBuilder();
-        for (int i = 0; i < getInventario().length; i++) {
-            if (getInventario()[i] != null) {
-                contador++;
-            }
+    /**
+     * Método para que el jugador coja un objeto.
+     *
+     * @param objeto Objeto a coger.
+     * @throws AventuraException Si el objeto no es inventariable o el inventario está lleno.
+     */
+    public void coger(Objeto objeto) throws AventuraException, InventarioLlenoException {
+        /*
+        Para poder coger un objeto, deben pasar dos cosas:
+        1. Que el objeto sea Inventariable
+        2. Que haya espacio en el inventario
+        */
+
+        if (!(objeto instanceof domain.Inventariable)) {
+            throw new AventuraException("El objeto %s no se puede coger.".formatted(objeto.getNombre()));
         }
 
-        if (contador == 0) {
-            throw new InventarioVacioException("El inventario está vacío");
-        } else {
-            for (int i = 0; i < getInventario().length; i++) {
-                if (getInventario()[i] != null) {
-
-                    contenido.append(contador++).append(". ").append(inventario[i].getNombre()).append(System.lineSeparator());
-
-                }
-            }
-        }
-        return contenido.toString();
-    }
-
-    public String  mostrarObjetosLeibles(){
-        int contador = 1;
-        StringBuilder contenido = new StringBuilder();
-
+        boolean inventarioLleno = true;
         for (int i = 0; i < inventario.length; i++) {
-            if(inventario[i]!= null && inventario[i] instanceof Leible){
-                contenido.append(contador++).append(". ").append(inventario[i].getNombre()).append(System.lineSeparator());
+            if (inventario[i] == null) {
+                inventario[i] = objeto;
+                inventarioLleno = false;
+                break; // Salimos del bucle al coger el objeto
             }
         }
-        return contenido.toString();
+        if (inventarioLleno) {
+            throw new InventarioLlenoException("El inventario está lleno. No puedes coger más objetos.");
+        }
+
+    }
+
+    /**
+     * Método para eliminar un objeto del inventario.
+     *
+     * @param objeto Objeto a eliminar.
+     * @return true si se eliminó el objeto, false si no se encontró.
+     */
+    public boolean eliminarDeInventario(Objeto objeto) {
+        for (int i = 0; i < inventario.length; i++) {
+            if (inventario[i] != null && inventario[i].equals(objeto)) {
+                inventario[i] = null;
+                return true; // Salimos del método al eliminar el objeto
+            }
+        }
+        return false; // No se encontró el objeto en el inventario
+    }
+
+    /**
+     * Busca un objeto en el inventario por su nombre.
+     *
+     * @param nombre Nombre del objeto a buscar.
+     * @return El objeto si se encuentra, null en caso contrario.
+     */
+    public Objeto buscarEnInventario(String nombre) {
+        for (Objeto objeto : inventario) {
+            if (objeto != null && objeto.getNombre().equalsIgnoreCase(nombre)) {
+                return objeto;
+            }
+        }
+        return null; // No lo tienes encima
     }
 
 }

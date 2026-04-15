@@ -1,6 +1,7 @@
-package domain;
+package main.java.domain;
 
-import Exceptions.ObjetoNoCombinableException;
+
+import main.java.Exceptions.ObjetoNoCombinableException;
 
 public interface Combinable {
     Objeto combinar(Objeto otro) throws ObjetoNoCombinableException;
