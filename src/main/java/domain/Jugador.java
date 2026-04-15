@@ -4,12 +4,14 @@ package main.java.domain;
 import main.java.Exceptions.AventuraException;
 import main.java.Exceptions.InventarioLlenoException;
 
+import java.util.ArrayList;
+
 public class Jugador {
     private static final int MAX_INVENTARIO = 10;
 
     private String nombre;
-    private Objeto[] inventario = new Objeto[MAX_INVENTARIO];
-    private int habitacionActual;
+    private ArrayList<Objeto> inventario;
+    private String habitacionActual;
 
     /**
      * Constructor de la clase Jugador.
@@ -18,7 +20,8 @@ public class Jugador {
      */
     public Jugador(String nombre) {
         this.nombre = nombre;
-        this.habitacionActual = 0;
+        this.habitacionActual = "0";
+        inventario = new ArrayList<>();
     }
 
     /** Getters y Setters */
@@ -26,15 +29,15 @@ public class Jugador {
         return nombre;
     }
 
-    public int getHabitacionActual() {
+    public String getHabitacionActual() {
         return habitacionActual;
     }
 
-    public void setHabitacionActual(int habitacionActual) {
+    public void setHabitacionActual(String habitacionActual) {
         this.habitacionActual = habitacionActual;
     }
 
-    public Objeto[] getInventario() {
+    public ArrayList<Objeto> getInventario() {
         return inventario;
     }
 
@@ -51,21 +54,11 @@ public class Jugador {
         2. Que haya espacio en el inventario
         */
 
-        if (!(objeto instanceof domain.Inventariable)) {
+        if (!(objeto instanceof Inventariable)) {
             throw new AventuraException("El objeto %s no se puede coger.".formatted(objeto.getNombre()));
         }
 
-        boolean inventarioLleno = true;
-        for (int i = 0; i < inventario.length; i++) {
-            if (inventario[i] == null) {
-                inventario[i] = objeto;
-                inventarioLleno = false;
-                break; // Salimos del bucle al coger el objeto
-            }
-        }
-        if (inventarioLleno) {
-            throw new InventarioLlenoException("El inventario está lleno. No puedes coger más objetos.");
-        }
+        inventario.add(objeto); //Añadimos el objeto sin comprobar ya que tenemos un inventario infinito
 
     }
 
@@ -76,11 +69,8 @@ public class Jugador {
      * @return true si se eliminó el objeto, false si no se encontró.
      */
     public boolean eliminarDeInventario(Objeto objeto) {
-        for (int i = 0; i < inventario.length; i++) {
-            if (inventario[i] != null && inventario[i].equals(objeto)) {
-                inventario[i] = null;
-                return true; // Salimos del método al eliminar el objeto
-            }
+        if (inventario.remove(objeto)) {
+            return true; //Eliminamos el objeto
         }
         return false; // No se encontró el objeto en el inventario
     }
