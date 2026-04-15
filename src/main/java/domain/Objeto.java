@@ -1,6 +1,6 @@
-package domain;
+package main.java.domain;
 
-public abstract class Objeto extends Entidad {
+public abstract class Objeto extends domain.Entidad {
     private boolean visible;
 
     public Objeto(String descripcion, String nombre, boolean visible) {

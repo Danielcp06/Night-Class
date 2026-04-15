@@ -1,4 +1,4 @@
-package domain;
+package main.java.domain;
 
 public class Llave extends Item {
     private String codigoDeSeguridad;

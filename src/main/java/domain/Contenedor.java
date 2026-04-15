@@ -1,4 +1,4 @@
-package domain;
+package main.java.domain;
 
 public class Contenedor extends Mueble implements Abrible {
     private String codigoNecesario; // Si es null, se abre sin llave.
@@ -37,6 +37,26 @@ public class Contenedor extends Mueble implements Abrible {
     @Override
     public boolean estaAbierto() {
         return abierto;
+    }
+
+    @Override
+    public String getCodigoNecesario() {
+        return codigoNecesario;
+    }
+
+    @Override
+    public Objeto getContenido() {
+        return objetoContenido;
+    }
+
+    @Override
+    public void setContenido(Objeto contenido) {
+        this.objetoContenido = contenido;
+    }
+
+    @Override
+    public void cerrar() {
+        this.abierto = false;
     }
 
     public Objeto getObjetoContenido() {

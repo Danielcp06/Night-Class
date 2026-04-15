@@ -1,4 +1,4 @@
-package Exceptions;
+package main.java.Exceptions;
 
 public class InventarioVacioException extends Exception {
     public InventarioVacioException(String message) {

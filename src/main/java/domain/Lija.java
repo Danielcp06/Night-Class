@@ -1,6 +1,7 @@
-package domain;
+package main.java.domain;
 
-import Exceptions.ObjetoNoCombinableException;
+
+import main.java.Exceptions.ObjetoNoCombinableException;
 
 public class Lija extends Item implements Combinable{
     public Lija(String descripcion, String nombre, boolean visible) {

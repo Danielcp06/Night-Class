@@ -1,4 +1,4 @@
-package Exceptions;
+package main.java.Exceptions;
 
 public class ObjetoNoEncontradoException extends Exception {
     public ObjetoNoEncontradoException(String message) {
